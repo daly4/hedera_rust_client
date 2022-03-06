@@ -5,6 +5,10 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+## IMPORTANT
+
+Integration tests are not complete (file service, smart contract service, etc.) Expect bugs throughout. API of lib *will* change
+
 # hedera_rust_client
 
 Rust client for the Hedera Network
@@ -82,13 +86,13 @@ Project Link: [https://github.com/daly4/hedera_rust_client](https://github.com/d
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/daly4/hedera_rust_client.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/daly4/hedera_rust_client
 [contributors-url]: https://github.com/daly4/hedera_rust_client/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/daly4/hedera_rust_client.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/daly4/hedera_rust_client
 [forks-url]: https://github.com/daly4/hedera_rust_client/network/members
-[stars-shield]: https://img.shields.io/github/stars/daly4/hedera_rust_client.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/daly4/hedera_rust_client
 [stars-url]: https://github.com/daly4/hedera_rust_client/stargazers
-[issues-shield]: https://img.shields.io/github/issues/daly4/hedera_rust_client.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/daly4/hedera_rust_client
 [issues-url]: https://github.com/daly4/hedera_rust_client/issues
-[license-shield]: https://img.shields.io/github/license/daly4/hedera_rust_client.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/daly4/hedera_rust_client
 [license-url]: https://github.com/daly4/hedera_rust_client/blob/master/LICENSE.txt
