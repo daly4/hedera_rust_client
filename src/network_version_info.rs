@@ -31,7 +31,9 @@ pub struct NetworkVersionInfo {
 
 impl TryFrom<services::NetworkGetVersionInfoResponse> for NetworkVersionInfo {
     type Error = HederaError;
-    fn try_from(services: services::NetworkGetVersionInfoResponse) -> Result<NetworkVersionInfo, Self::Error> {
+    fn try_from(
+        services: services::NetworkGetVersionInfoResponse,
+    ) -> Result<NetworkVersionInfo, Self::Error> {
         Ok(NetworkVersionInfo {
             hapi_proto_version: match services.hapi_proto_version {
                 Some(v) => SemanticVersion::from(v),

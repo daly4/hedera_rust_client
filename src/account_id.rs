@@ -80,7 +80,10 @@ impl TryFrom<ProtoAccountId> for AccountId {
         Ok(Self::new(
             services.shard_num,
             services.realm_num,
-            services.account.ok_or(HederaError::NoAccountId)?.try_into()?,
+            services
+                .account
+                .ok_or(HederaError::NoAccountId)?
+                .try_into()?,
             None,
         ))
     }

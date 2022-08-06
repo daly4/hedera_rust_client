@@ -14,7 +14,10 @@ pub struct QueryResponse {
 }
 
 impl QueryResponse {
-    pub fn new(header: QueryResponseHeader, services: Option<services::response::Response>) -> QueryResponse {
+    pub fn new(
+        header: QueryResponseHeader,
+        services: Option<services::response::Response>,
+    ) -> QueryResponse {
         QueryResponse { header, services }
     }
 

@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Duration, Utc};
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 use crate::entity_id::validate_option_id_checksum;
@@ -27,7 +27,10 @@ impl ContractUpdateTransaction {
     pub fn new() -> ContractUpdateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let services = Proto::new();
-        ContractUpdateTransaction { transaction, services }
+        ContractUpdateTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {
@@ -113,7 +116,9 @@ fn memo_proto(
     memo_field: &Option<String>,
 ) -> Result<Option<services::contract_update_transaction_body::MemoField>, HederaError> {
     let f = match memo_field {
-        Some(x) => Some(services::contract_update_transaction_body::MemoField::MemoWrapper(x.clone())),
+        Some(x) => {
+            Some(services::contract_update_transaction_body::MemoField::MemoWrapper(x.clone()))
+        }
         None => None,
     };
     Ok(f)

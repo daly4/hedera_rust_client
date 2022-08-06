@@ -1,13 +1,13 @@
-use num::pow;
-use std::collections::HashMap;
-use std::convert::TryFrom;
-use std::time::Duration;
-use std::cmp::min;
 use crate::client::Client;
 use crate::error::HederaError;
 use crate::proto::{mirror, ToProto};
 use crate::topic_message::TopicMessage;
 use crate::TransactionId;
+use num::pow;
+use std::cmp::min;
+use std::collections::HashMap;
+use std::convert::TryFrom;
+use std::time::Duration;
 
 #[derive(Debug, Clone)]
 pub struct TopicMessageQuery {
@@ -70,7 +70,7 @@ impl TopicMessageQuery {
                     if code != tonic::Code::Ok
                         && (code == tonic::Code::Unavailable || code == tonic::Code::NotFound)
                     {
-                        let delay = min(250*pow(u64::from(attempt), 2), 8000);
+                        let delay = min(250 * pow(u64::from(attempt), 2), 8000);
                         tokio::time::sleep(Duration::from_millis(delay)).await;
                         attempt += 1;
                         continue;

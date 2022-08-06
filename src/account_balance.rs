@@ -22,7 +22,9 @@ impl AccountBalance {
 impl TryFrom<services::CryptoGetAccountBalanceResponse> for AccountBalance {
     type Error = HederaError;
 
-    fn try_from(services: services::CryptoGetAccountBalanceResponse) -> Result<AccountBalance, Self::Error> {
+    fn try_from(
+        services: services::CryptoGetAccountBalanceResponse,
+    ) -> Result<AccountBalance, Self::Error> {
         let mut token = HashMap::new();
         for token_balance in services.token_balances.iter() {
             if let Some(token_id) = &token_balance.token_id {

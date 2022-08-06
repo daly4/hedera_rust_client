@@ -876,11 +876,14 @@ macro_rules! gen_query_execute {
         ) -> Result<$val_type, crate::error::HederaError> {
             let res = self.execute_async(client).await?;
             let proto_response = res.to_proto_query()?;
-            if let crate::proto::services::response::Response::$response_enum(res) = proto_response {
+            if let crate::proto::services::response::Response::$response_enum(res) = proto_response
+            {
                 let response = ($fn)(res)?;
                 return Ok(response);
             }
-            Err(crate::error::HederaError::UnexpectedProtoResponseType(format!("{:?}", proto_response)))
+            Err(crate::error::HederaError::UnexpectedProtoResponseType(
+                format!("{:?}", proto_response),
+            ))
         }
     };
 }
@@ -893,11 +896,14 @@ macro_rules! gen_query_execute_with_cost_check {
         ) -> Result<$val_type, crate::error::HederaError> {
             let res = self.execute_async_with_cost_check(client).await?;
             let proto_response = res.to_proto_query()?;
-            if let crate::proto::services::response::Response::$response_enum(res) = proto_response {
+            if let crate::proto::services::response::Response::$response_enum(res) = proto_response
+            {
                 let response = ($fn)(res)?;
                 return Ok(response);
             }
-            Err(crate::error::HederaError::UnexpectedProtoResponseType(format!("{:?}", proto_response)))
+            Err(crate::error::HederaError::UnexpectedProtoResponseType(
+                format!("{:?}", proto_response),
+            ))
         }
     };
 }
@@ -910,11 +916,14 @@ macro_rules! gen_query_execute_non_failable_with_cost_check {
         ) -> Result<$val_type, crate::error::HederaError> {
             let res = self.execute_async_with_cost_check(client).await?;
             let proto_response = res.to_proto_query()?;
-            if let crate::proto::services::response::Response::$response_enum(res) = proto_response {
+            if let crate::proto::services::response::Response::$response_enum(res) = proto_response
+            {
                 let response = ($fn)(res);
                 return Ok(response);
             }
-            Err(crate::error::HederaError::UnexpectedProtoResponseType(format!("{:?}", proto_response)))
+            Err(crate::error::HederaError::UnexpectedProtoResponseType(
+                format!("{:?}", proto_response),
+            ))
         }
     };
 }

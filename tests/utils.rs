@@ -2,12 +2,11 @@
 
 use dotenv::dotenv;
 use hedera_rust_client::{
-    AccountId, Client, ClientBuilder, NetworkName, Operator, PrivateKey,
-    PublicKey, HederaError, Hbar, AccountCreateTransaction, 
-    AccountDeleteTransaction, TokenDeleteTransaction, TokenId,
+    AccountCreateTransaction, AccountDeleteTransaction, AccountId, Client, ClientBuilder, Hbar,
+    HederaError, NetworkName, Operator, PrivateKey, PublicKey, TokenDeleteTransaction, TokenId,
 };
-use std::env;
 use std::collections::HashMap;
+use std::env;
 
 #[derive(Debug)]
 pub struct IntegrationTestEnv {
@@ -36,7 +35,8 @@ impl IntegrationTestEnv {
         let client = ClientBuilder::default()
             .operator(operator)
             .for_network_name(network)?
-            .build().unwrap();
+            .build()
+            .unwrap();
 
         Ok(client)
     }
@@ -58,19 +58,22 @@ impl IntegrationTestEnv {
             }
         }
         if network.is_empty() {
-            return Err(HederaError::NoNetworkNodes)
+            return Err(HederaError::NoNetworkNodes);
         }
         client.set_network(network).await.unwrap();
 
         let new_key = PrivateKey::new();
+        let initial_balance = Hbar::new(50.0);
         let resp = AccountCreateTransaction::new()
-            .set_key(new_key.clone().into())?
-            .set_initial_balance(Hbar::new(50.0))?
+            .set_key(new_key.clone().into())
+            .unwrap()
+            .set_initial_balance(initial_balance)
+            .unwrap()
             .execute(&client)
-            .await?;
-        
-        let receipt = resp.get_receipt(&client).await?;
+            .await
+            .unwrap();
 
+        let receipt = resp.get_receipt(&client).await.unwrap();
         let account_id = receipt.account_id.expect(&format!(
             "no account_id in account create receipt: {:?}",
             receipt
@@ -118,5 +121,27 @@ impl IntegrationTestEnv {
 
         let _ = res.get_receipt(&self.client).await?;
         Ok(())
+    }
+
+    pub async fn new_test_account(
+        &self,
+        initial_balance: Hbar,
+    ) -> Result<(AccountId, PrivateKey), HederaError> {
+        let new_key = PrivateKey::new();
+        let resp = AccountCreateTransaction::new()
+            .set_key(new_key.clone().into())
+            .unwrap()
+            .set_initial_balance(initial_balance)
+            .unwrap()
+            .execute(&self.client)
+            .await
+            .unwrap();
+
+        let receipt = resp.get_receipt(&self.client).await.unwrap();
+        let account_id = receipt.account_id.expect(&format!(
+            "no account_id in account create receipt: {:?}",
+            receipt
+        ));
+        Ok((account_id, new_key))
     }
 }

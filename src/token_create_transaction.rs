@@ -1,8 +1,9 @@
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Duration, Utc};
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 use crate::entity_id::{validate_option_id_checksum, ValidateChecksum};
 use crate::transaction::Transaction;
+use crate::utils::DEFAULT_DURATION;
 use crate::AccountId;
 use crate::Client;
 use crate::CustomFee;
@@ -11,7 +12,6 @@ use crate::HederaError;
 use crate::Key;
 use crate::TokenSupplyType;
 use crate::TokenType;
-use crate::utils::DEFAULT_DURATION;
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
 #[hedera_derive(service(method_service_name = "token", method_service_fn = "create_token"))]
@@ -26,7 +26,10 @@ impl TokenCreateTransaction {
         let mut services = Proto::new();
         services.auto_renew_period = Some(*DEFAULT_DURATION); //min
         services.expiry = Some(Utc::now() + *DEFAULT_DURATION);
-        TokenCreateTransaction { transaction, services }
+        TokenCreateTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

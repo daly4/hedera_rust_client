@@ -17,7 +17,9 @@ pub struct TransactionFeeSchedule {
 
 impl TryFrom<ProtoTransactionFeeSchedule> for TransactionFeeSchedule {
     type Error = HederaError;
-    fn try_from(services: ProtoTransactionFeeSchedule) -> Result<TransactionFeeSchedule, Self::Error> {
+    fn try_from(
+        services: ProtoTransactionFeeSchedule,
+    ) -> Result<TransactionFeeSchedule, Self::Error> {
         #[allow(deprecated)]
         let fee_data = match services.fee_data {
             Some(x) => Some(x.try_into()?),

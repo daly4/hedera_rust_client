@@ -15,7 +15,9 @@ pub struct TopicMessageChunk {
 
 impl TryFrom<mirror::ConsensusTopicResponse> for TopicMessageChunk {
     type Error = HederaError;
-    fn try_from(services: mirror::ConsensusTopicResponse) -> Result<TopicMessageChunk, Self::Error> {
+    fn try_from(
+        services: mirror::ConsensusTopicResponse,
+    ) -> Result<TopicMessageChunk, Self::Error> {
         Ok(TopicMessageChunk {
             consensus_timestamp: utils::non_optional_timestamp(services.consensus_timestamp)?,
             content_size: services.message.len(),

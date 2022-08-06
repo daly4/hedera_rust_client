@@ -103,9 +103,11 @@ impl Network {
     pub async fn set_ledger_id(&mut self, id: LedgerId) -> Result<(), HederaError> {
         self.network.ledger_id = id.clone();
         if self.network.transport_security {
-            let address_book = Self::read_address_book_resource(
-                &format!("addressbook/{}.services", id.to_string())
-            ).await?;
+            let address_book = Self::read_address_book_resource(&format!(
+                "addressbook/{}.services",
+                id.to_string()
+            ))
+            .await?;
             self.network.set_nodes_address_book(&address_book).await?;
             self.address_book = Some(address_book);
         }

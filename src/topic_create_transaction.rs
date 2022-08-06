@@ -1,14 +1,14 @@
 use crate::entity_id::validate_option_id_checksum;
 
 use crate::transaction::Transaction;
+use crate::utils::DEFAULT_DURATION;
 use crate::AccountId;
 use crate::Client;
 use crate::Hbar;
 use crate::HederaError;
 use crate::Key;
-use crate::utils::DEFAULT_DURATION;
-use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 use chrono::Duration;
+use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
 #[hedera_derive(service(method_service_name = "topic", method_service_fn = "create_topic"))]
@@ -22,7 +22,10 @@ impl TopicCreateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let mut services = Proto::new();
         services.auto_renew_period = Some(*DEFAULT_DURATION);
-        TopicCreateTransaction { transaction, services }
+        TopicCreateTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

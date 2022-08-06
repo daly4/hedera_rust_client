@@ -1,6 +1,8 @@
 mod utils;
 use chrono::Duration;
-use hedera_rust_client::{Key, PrivateKey, TokenCreateTransaction, TokenInfoQuery, TokenType, TokenSupplyType};
+use hedera_rust_client::{
+    Key, PrivateKey, TokenCreateTransaction, TokenInfoQuery, TokenSupplyType, TokenType,
+};
 
 #[tokio::test]
 #[ignore]
@@ -9,26 +11,43 @@ async fn test_token_create() {
 
     let key: Key = env.client.operator_public_key().into();
     let resp = TokenCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_name("ffff".to_string()).unwrap()
-        .set_symbol("F".to_string()).unwrap()
-        .set_memo("fnord".to_string()).unwrap()
-        .set_decimals(3).unwrap()
-		.set_initial_supply(1000000).unwrap()
-		.set_treasury(env.operator_id).unwrap()
-        .set_auto_renew_account(env.operator_id).unwrap()
-		.set_admin_key(key.clone()).unwrap()
-		.set_freeze_key(key.clone()).unwrap()
-		.set_wipe_key(key.clone()).unwrap()
-		.set_kyc_key(key.clone()).unwrap()
-		.set_supply_key(key).unwrap()
-		.set_freeze_default(false).unwrap()
-		.execute(&env.client)
-        .await.unwrap();
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_name("ffff".to_string())
+        .unwrap()
+        .set_symbol("F".to_string())
+        .unwrap()
+        .set_memo("fnord".to_string())
+        .unwrap()
+        .set_decimals(3)
+        .unwrap()
+        .set_initial_supply(1000000)
+        .unwrap()
+        .set_treasury(env.operator_id)
+        .unwrap()
+        .set_auto_renew_account(env.operator_id)
+        .unwrap()
+        .set_admin_key(key.clone())
+        .unwrap()
+        .set_freeze_key(key.clone())
+        .unwrap()
+        .set_wipe_key(key.clone())
+        .unwrap()
+        .set_kyc_key(key.clone())
+        .unwrap()
+        .set_supply_key(key)
+        .unwrap()
+        .set_freeze_default(false)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
-    let token_id = receipt.token_id.expect(&format!("no token_id in receipt: {:?}",receipt));
+    let token_id = receipt
+        .token_id
+        .expect(&format!("no token_id in receipt: {:?}", receipt));
 
     env.close_with_token(token_id).await.unwrap();
 }
@@ -48,26 +67,43 @@ async fn test_token_create_multiple_keys() {
 
     let op_key: Key = env.client.operator_public_key().into();
     let resp = TokenCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_name("ffff".to_string()).unwrap()
-        .set_symbol("F".to_string()).unwrap()
-        .set_memo("fnord".to_string()).unwrap()
-        .set_decimals(3).unwrap()
-		.set_initial_supply(1000000).unwrap()
-		.set_treasury(env.operator_id).unwrap()
-        .set_auto_renew_account(env.operator_id).unwrap()
-		.set_admin_key(op_key).unwrap()
-		.set_freeze_key(keys[0].clone()).unwrap()
-		.set_wipe_key(keys[1].clone()).unwrap()
-		.set_kyc_key(keys[2].clone()).unwrap()
-		.set_supply_key(keys[3].clone()).unwrap()
-		.set_freeze_default(false).unwrap()
-		.execute(&env.client)
-        .await.unwrap();
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_name("ffff".to_string())
+        .unwrap()
+        .set_symbol("F".to_string())
+        .unwrap()
+        .set_memo("fnord".to_string())
+        .unwrap()
+        .set_decimals(3)
+        .unwrap()
+        .set_initial_supply(1000000)
+        .unwrap()
+        .set_treasury(env.operator_id)
+        .unwrap()
+        .set_auto_renew_account(env.operator_id)
+        .unwrap()
+        .set_admin_key(op_key)
+        .unwrap()
+        .set_freeze_key(keys[0].clone())
+        .unwrap()
+        .set_wipe_key(keys[1].clone())
+        .unwrap()
+        .set_kyc_key(keys[2].clone())
+        .unwrap()
+        .set_supply_key(keys[3].clone())
+        .unwrap()
+        .set_freeze_default(false)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
-    let token_id = receipt.token_id.expect(&format!("no token_id in receipt: {:?}",receipt));
+    let token_id = receipt
+        .token_id
+        .expect(&format!("no token_id in receipt: {:?}", receipt));
 
     env.close_with_token(token_id).await.unwrap();
 }
@@ -78,23 +114,34 @@ async fn test_token_create_no_keys() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     let resp = TokenCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_name("ffff".to_string()).unwrap()
-        .set_symbol("F".to_string()).unwrap()
-		.set_treasury(env.operator_id).unwrap()
-        .set_auto_renew_account(env.operator_id).unwrap()
-		.execute(&env.client)
-        .await.unwrap();
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_name("ffff".to_string())
+        .unwrap()
+        .set_symbol("F".to_string())
+        .unwrap()
+        .set_treasury(env.operator_id)
+        .unwrap()
+        .set_auto_renew_account(env.operator_id)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
-    let token_id = receipt.token_id.expect(&format!("no token_id in receipt: {:?}",receipt));
+    let token_id = receipt
+        .token_id
+        .expect(&format!("no token_id in receipt: {:?}", receipt));
 
     let info = TokenInfoQuery::new()
-        .set_node_account_ids(vec![resp.node_id]).unwrap()
-        .set_token_id(token_id).unwrap()
+        .set_node_account_ids(vec![resp.node_id])
+        .unwrap()
+        .set_token_id(token_id)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     assert_eq!(info.name, "ffff");
     assert_eq!(info.symbol, "F");
@@ -132,29 +179,48 @@ async fn test_token_create_admin_sign() {
 
     let op_key: Key = env.client.operator_public_key().into();
     let resp = TokenCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_name("ffff".to_string()).unwrap()
-        .set_symbol("F".to_string()).unwrap()
-        .set_memo("fnord".to_string()).unwrap()
-        .set_decimals(3).unwrap()
-		.set_initial_supply(1000000).unwrap()
-		.set_treasury(env.operator_id).unwrap()
-        .set_auto_renew_account(env.operator_id).unwrap()
-		.set_admin_key(op_key).unwrap()
-		.set_freeze_key(keys[1].clone()).unwrap()
-		.set_wipe_key(keys[2].clone()).unwrap()
-		.set_kyc_key(keys[3].clone()).unwrap()
-		.set_supply_key(keys[4].clone()).unwrap()
-		.freeze_with(Some(&env.client))
-        .await.unwrap()
-        .sign(&priv_keys[0]).unwrap()
-        .sign(&priv_keys[1]).unwrap()
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_name("ffff".to_string())
+        .unwrap()
+        .set_symbol("F".to_string())
+        .unwrap()
+        .set_memo("fnord".to_string())
+        .unwrap()
+        .set_decimals(3)
+        .unwrap()
+        .set_initial_supply(1000000)
+        .unwrap()
+        .set_treasury(env.operator_id)
+        .unwrap()
+        .set_auto_renew_account(env.operator_id)
+        .unwrap()
+        .set_admin_key(op_key)
+        .unwrap()
+        .set_freeze_key(keys[1].clone())
+        .unwrap()
+        .set_wipe_key(keys[2].clone())
+        .unwrap()
+        .set_kyc_key(keys[3].clone())
+        .unwrap()
+        .set_supply_key(keys[4].clone())
+        .unwrap()
+        .freeze_with(Some(&env.client))
+        .await
+        .unwrap()
+        .sign(&priv_keys[0])
+        .unwrap()
+        .sign(&priv_keys[1])
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
-    let token_id = receipt.token_id.expect(&format!("no token_id in receipt: {:?}",receipt));
+    let token_id = receipt
+        .token_id
+        .expect(&format!("no token_id in receipt: {:?}", receipt));
 
     env.close_with_token(token_id).await.unwrap();
 }
@@ -166,27 +232,45 @@ async fn test_token_nft_create() {
 
     let key: Key = env.client.operator_public_key().into();
     let resp = TokenCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_name("ffff".to_string()).unwrap()
-        .set_symbol("F".to_string()).unwrap()
-        .set_memo("fnord".to_string()).unwrap()
-        .set_token_type(TokenType::NonFungibleUnique).unwrap()
-        .set_supply_type(TokenSupplyType::Finite).unwrap()
-        .set_max_supply(5).unwrap()
-		.set_treasury(env.operator_id).unwrap()
-        .set_auto_renew_account(env.operator_id).unwrap()
-		.set_admin_key(key.clone()).unwrap()
-		.set_freeze_key(key.clone()).unwrap()
-		.set_wipe_key(key.clone()).unwrap()
-		.set_kyc_key(key.clone()).unwrap()
-		.set_supply_key(key).unwrap()
-		.set_freeze_default(false).unwrap()
-		.execute(&env.client)
-        .await.unwrap();
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_name("ffff".to_string())
+        .unwrap()
+        .set_symbol("F".to_string())
+        .unwrap()
+        .set_memo("fnord".to_string())
+        .unwrap()
+        .set_token_type(TokenType::NonFungibleUnique)
+        .unwrap()
+        .set_supply_type(TokenSupplyType::Finite)
+        .unwrap()
+        .set_max_supply(5)
+        .unwrap()
+        .set_treasury(env.operator_id)
+        .unwrap()
+        .set_auto_renew_account(env.operator_id)
+        .unwrap()
+        .set_admin_key(key.clone())
+        .unwrap()
+        .set_freeze_key(key.clone())
+        .unwrap()
+        .set_wipe_key(key.clone())
+        .unwrap()
+        .set_kyc_key(key.clone())
+        .unwrap()
+        .set_supply_key(key)
+        .unwrap()
+        .set_freeze_default(false)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
-    let token_id = receipt.token_id.expect(&format!("no token_id in receipt: {:?}",receipt));
+    let token_id = receipt
+        .token_id
+        .expect(&format!("no token_id in receipt: {:?}", receipt));
 
     env.close_with_token(token_id).await.unwrap();
 }

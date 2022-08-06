@@ -30,7 +30,11 @@ impl ContractInfoQuery {
             header: None,
             contract_id: None,
         };
-        ContractInfoQuery { query, header, services }
+        ContractInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_contract_id_fns!();

@@ -6,10 +6,10 @@ use std::convert::Infallible;
 use std::num::{ParseFloatError, ParseIntError, TryFromIntError};
 use thiserror::Error;
 
+use crate::client::ClientBuilderError;
 use crate::crypto::Asn1Error;
 use crate::status::Status;
 use crate::Hbar;
-use crate::client::ClientBuilderError;
 
 #[derive(Error, Debug)]
 pub enum HederaError {

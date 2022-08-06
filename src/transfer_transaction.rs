@@ -24,7 +24,10 @@ impl TransferTransaction {
     pub fn new() -> TransferTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(1.0));
         let services = Proto::new();
-        TransferTransaction { transaction, services }
+        TransferTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

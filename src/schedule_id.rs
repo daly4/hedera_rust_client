@@ -1,9 +1,11 @@
-use hedera_derive::{Id, IdProto, IdPartialEq, IdValidateChecksum};
+use hedera_derive::{Id, IdPartialEq, IdProto, IdValidateChecksum};
 use serde::{Deserialize, Serialize};
 
 use crate::id::IdChecksum;
 
-#[derive(Id, IdProto, IdPartialEq, IdValidateChecksum, Debug, Clone, Copy, Hash, Serialize, Deserialize)]
+#[derive(
+    Id, IdProto, IdPartialEq, IdValidateChecksum, Debug, Clone, Copy, Hash, Serialize, Deserialize,
+)]
 #[hedera_derive(field_name = "schedule_num")]
 pub struct ScheduleId {
     shard_num: i64,

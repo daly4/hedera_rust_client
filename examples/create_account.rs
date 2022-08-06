@@ -1,13 +1,12 @@
-use std::env;
 use dotenv::dotenv;
 use hedera_rust_client::{
-    AccountId, ClientBuilder, NetworkName, Operator, PrivateKey,
-    Hbar, HederaError, AccountCreateTransaction,
+    AccountCreateTransaction, AccountId, ClientBuilder, Hbar, HederaError, NetworkName, Operator,
+    PrivateKey,
 };
+use std::env;
 
 #[tokio::main]
 async fn main() -> Result<(), HederaError> {
-
     // Setup Client from .env file for testnet
     dotenv().ok();
 

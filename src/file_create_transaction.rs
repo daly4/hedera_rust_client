@@ -22,7 +22,10 @@ impl FileCreateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(5.0));
         let mut services = Proto::new();
         services.expiration_time = Some(Utc::now() + Duration::seconds(7890000));
-        FileCreateTransaction { transaction, services }
+        FileCreateTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, _client: &Client) -> Result<(), HederaError> {

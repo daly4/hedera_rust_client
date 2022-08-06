@@ -23,7 +23,9 @@ impl ToProto<services::Key> for Key {
             Key::KeyList(key_list) => key_list.to_proto_key_list_key()?,
             Key::ThresholdKey(key_list) => key_list.to_proto_threshold_key()?,
             Key::ContractId(id) => services::key::Key::ContractId(id.to_proto()?),
-            Key::DelegatableContractId(id) => services::key::Key::DelegatableContractId(id.to_proto()?),
+            Key::DelegatableContractId(id) => {
+                services::key::Key::DelegatableContractId(id.to_proto()?)
+            }
         };
         Ok(services::Key { key: Some(key) })
     }
@@ -35,8 +37,12 @@ impl TryFrom<services::Key> for Key {
         match services.key {
             Some(pb_key) => {
                 let key = match pb_key {
-                    services::key::Key::Ed25519(bytes) => Key::Ed25519(PublicKey::from_hex_bytes(bytes)?),
-                    services::key::Key::ThresholdKey(key) => Key::ThresholdKey(KeyList::try_from(key)?),
+                    services::key::Key::Ed25519(bytes) => {
+                        Key::Ed25519(PublicKey::from_hex_bytes(bytes)?)
+                    }
+                    services::key::Key::ThresholdKey(key) => {
+                        Key::ThresholdKey(KeyList::try_from(key)?)
+                    }
                     services::key::Key::KeyList(key) => Key::KeyList(KeyList::try_from(key)?),
                     services::key::Key::ContractId(id) => Key::ContractId(ContractId::from(id)),
                     services::key::Key::DelegatableContractId(id) => {

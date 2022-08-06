@@ -52,7 +52,9 @@ impl TryFrom<services::ScheduleInfo> for ScheduleInfo {
             transaction_body: services.scheduled_transaction_body,
             signatories: utils::optional_key_list(services.signers)?,
             admin_key: utils::optional_key(services.admin_key)?,
-            scheduled_transaction_id: utils::optional_transaction_id(services.scheduled_transaction_id)?,
+            scheduled_transaction_id: utils::optional_transaction_id(
+                services.scheduled_transaction_id,
+            )?,
             memo: services.memo,
             expiration_time: utils::optional_timestamp(services.expiration_time)?,
             executed_at,

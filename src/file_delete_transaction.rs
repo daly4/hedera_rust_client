@@ -18,7 +18,10 @@ impl FileDeleteTransaction {
     pub fn new() -> FileDeleteTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(5.0));
         let services = Proto::new();
-        FileDeleteTransaction { transaction, services }
+        FileDeleteTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

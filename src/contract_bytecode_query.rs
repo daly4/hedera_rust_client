@@ -30,7 +30,11 @@ impl ContractByteCodeQuery {
             header: None,
             contract_id: None,
         };
-        ContractByteCodeQuery { query, header, services }
+        ContractByteCodeQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_contract_id_fns!();

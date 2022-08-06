@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Duration, Utc};
 use std::convert::TryFrom;
 
 use crate::error::HederaError;
@@ -38,7 +38,9 @@ pub struct TopicInfo {
 
 impl TryFrom<services::ConsensusGetTopicInfoResponse> for TopicInfo {
     type Error = HederaError;
-    fn try_from(services: services::ConsensusGetTopicInfoResponse) -> Result<TopicInfo, Self::Error> {
+    fn try_from(
+        services: services::ConsensusGetTopicInfoResponse,
+    ) -> Result<TopicInfo, Self::Error> {
         if let Some(info) = services.topic_info {
             return Ok(TopicInfo {
                 topic_id: utils::non_optional_topic_id(services.topic_id)?,

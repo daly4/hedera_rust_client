@@ -109,7 +109,9 @@ impl ContractFunctionResult {
 
 impl TryFrom<services::ContractFunctionResult> for ContractFunctionResult {
     type Error = HederaError;
-    fn try_from(services: services::ContractFunctionResult) -> Result<ContractFunctionResult, Self::Error> {
+    fn try_from(
+        services: services::ContractFunctionResult,
+    ) -> Result<ContractFunctionResult, Self::Error> {
         let log_info = services
             .log_info
             .into_iter()

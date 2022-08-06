@@ -7,7 +7,7 @@ use crate::Hbar;
 use crate::HederaError;
 use crate::Key;
 use crate::TopicId;
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Duration, Utc};
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
@@ -21,7 +21,10 @@ impl TopicUpdateTransaction {
     pub fn new() -> TopicUpdateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let services = Proto::new();
-        TopicUpdateTransaction { transaction, services }
+        TopicUpdateTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

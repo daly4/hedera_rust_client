@@ -60,12 +60,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .extern_path(".proto.Timestamp", "crate::proto::services::Timestamp")
         .extern_path(".proto.AccountID", "crate::proto::services::AccountId")
         .extern_path(".proto.TokenID", "crate::proto::services::TokenId")
-        .extern_path(".proto.AccountAmount", "crate::proto::services::AccountAmount")
+        .extern_path(
+            ".proto.AccountAmount",
+            "crate::proto::services::AccountAmount",
+        )
         .extern_path(
             ".proto.CurrentAndNextFeeSchedule",
             "crate::proto::services::CurrentAndNextFeeSchedule",
         )
-        .extern_path(".proto.FeeComponents", "crate::proto::services::FeeComponents")
+        .extern_path(
+            ".proto.FeeComponents",
+            "crate::proto::services::FeeComponents",
+        )
         .extern_path(".proto.FeeData", "crate::proto::services::FeeData")
         .extern_path(".proto.FeeSchedule", "crate::proto::services::FeeSchedule")
         .extern_path(".proto.Key", "crate::proto::services::Key")
@@ -73,11 +79,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .extern_path(".proto.KeyList", "crate::proto::services::KeyList")
         .extern_path(".proto.NftTransfer", "crate::proto::services::NftTransfer")
         .extern_path(".proto.NodeAddress", "crate::proto::services::NodeAddress")
-        .extern_path(".proto.NodeAddressBook", "crate::proto::services::NodeAddressBook")
+        .extern_path(
+            ".proto.NodeAddressBook",
+            "crate::proto::services::NodeAddressBook",
+        )
         .extern_path(".proto.RealmID", "crate::proto::services::RealmId")
         .extern_path(".proto.ScheduleID", "crate::proto::services::ScheduleId")
-        .extern_path(".proto.SemanticVersion", "crate::proto::services::SemanticVersion")
-        .extern_path(".proto.ServiceEndpoint", "crate::proto::services::ServiceEndpoint")
+        .extern_path(
+            ".proto.SemanticVersion",
+            "crate::proto::services::SemanticVersion",
+        )
+        .extern_path(
+            ".proto.ServiceEndpoint",
+            "crate::proto::services::ServiceEndpoint",
+        )
         .extern_path(
             ".proto.ServicesConfigurationList",
             "crate::proto::services::ServicesConfigurationList",
@@ -85,10 +100,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .extern_path(".proto.Setting", "crate::proto::services::Setting")
         .extern_path(".proto.ShardID", "crate::proto::services::ShardId")
         .extern_path(".proto.Signature", "crate::proto::services::Signature")
-        .extern_path(".proto.SignatureList", "crate::proto::services::SignatureList")
-        .extern_path(".proto.SignatureMap", "crate::proto::services::SignatureMap")
-        .extern_path(".proto.SignaturePair", "crate::proto::services::SignaturePair")
-        .extern_path(".proto.ThresholdKey", "crate::proto::services::ThresholdKey")
+        .extern_path(
+            ".proto.SignatureList",
+            "crate::proto::services::SignatureList",
+        )
+        .extern_path(
+            ".proto.SignatureMap",
+            "crate::proto::services::SignatureMap",
+        )
+        .extern_path(
+            ".proto.SignaturePair",
+            "crate::proto::services::SignaturePair",
+        )
+        .extern_path(
+            ".proto.ThresholdKey",
+            "crate::proto::services::ThresholdKey",
+        )
         .extern_path(
             ".proto.ThresholdSignature",
             "crate::proto::services::ThresholdSignature",
@@ -97,8 +124,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ".proto.TimestampSeconds",
             "crate::proto::services::TimestampSeconds",
         )
-        .extern_path(".proto.TokenBalance", "crate::proto::services::TokenBalance")
-        .extern_path(".proto.TokenBalances", "crate::proto::services::TokenBalances")
+        .extern_path(
+            ".proto.TokenBalance",
+            "crate::proto::services::TokenBalance",
+        )
+        .extern_path(
+            ".proto.TokenBalances",
+            "crate::proto::services::TokenBalances",
+        )
         .extern_path(
             ".proto.TokenRelationship",
             "crate::proto::services::TokenRelationship",
@@ -112,8 +145,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ".proto.TransactionFeeSchedule",
             "crate::proto::services::TransactionFeeSchedule",
         )
-        .extern_path(".proto.TransactionID", "crate::proto::services::TransactionId")
-        .extern_path(".proto.TransferList", "crate::proto::services::TransferList")
+        .extern_path(
+            ".proto.TransactionID",
+            "crate::proto::services::TransactionId",
+        )
+        .extern_path(
+            ".proto.TransferList",
+            "crate::proto::services::TransferList",
+        )
         .extern_path(
             ".proto.HederaFunctionality",
             "crate::proto::services::HederaFunctionality",
@@ -123,8 +162,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ".proto.TokenFreezeStatus",
             "crate::proto::services::TokenFreezeStatus",
         )
-        .extern_path(".proto.TokenKycStatus", "crate::proto::services::TokenKycStatus")
-        .extern_path(".proto.TokenSupplyType", "crate::proto::services::TokenSupplyType")
+        .extern_path(
+            ".proto.TokenKycStatus",
+            "crate::proto::services::TokenKycStatus",
+        )
+        .extern_path(
+            ".proto.TokenSupplyType",
+            "crate::proto::services::TokenSupplyType",
+        )
         .extern_path(".proto.TokenType", "crate::proto::services::TokenType")
         .extern_path(".proto.ContractID", "crate::proto::services::ContractId")
         .out_dir(&streams_out_dir)

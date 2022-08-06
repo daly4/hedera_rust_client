@@ -19,7 +19,10 @@ impl LiveHashDeleteTransaction {
     pub fn new() -> LiveHashDeleteTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let services = Proto::new();
-        LiveHashDeleteTransaction { transaction, services }
+        LiveHashDeleteTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

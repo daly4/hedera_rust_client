@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Duration, Utc};
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 use crate::entity_id::validate_option_id_checksum;
@@ -21,7 +21,10 @@ impl AccountUpdateTransaction {
     pub fn new() -> AccountUpdateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let services = Proto::new();
-        AccountUpdateTransaction { transaction, services }
+        AccountUpdateTransaction {
+            transaction,
+            services,
+        }
     }
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {
         validate_option_id_checksum(&self.services.account_id_to_update, client)?;

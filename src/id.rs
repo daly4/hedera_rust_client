@@ -1,6 +1,6 @@
+use serde::{Deserialize, Serialize};
 use std::fmt::{self};
 use std::str::FromStr;
-use serde::{Deserialize, Serialize};
 
 use crate::error::HederaError;
 use crate::PublicKey;

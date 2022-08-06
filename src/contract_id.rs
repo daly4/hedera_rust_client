@@ -1,13 +1,10 @@
 use hedera_derive::{Id, IdPartialEq, IdValidateChecksum};
 use serde::{Deserialize, Serialize};
 
-use crate::id::IdChecksum;
-use crate::proto::services::{
-    ContractId as ProtoContractId,
-    contract_id::Contract,
-};
-use crate::proto::ToProto;
 use crate::error::HederaError;
+use crate::id::IdChecksum;
+use crate::proto::services::{contract_id::Contract, ContractId as ProtoContractId};
+use crate::proto::ToProto;
 
 #[derive(Id, IdPartialEq, IdValidateChecksum, Debug, Clone, Copy, Hash, Serialize, Deserialize)]
 #[hedera_derive(field_name = "contract_num")]

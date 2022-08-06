@@ -31,7 +31,11 @@ impl AccountStakersQuery {
             header: None,
             account_id: None,
         };
-        AccountStakersQuery { query, header, services }
+        AccountStakersQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_account_id_fns!();

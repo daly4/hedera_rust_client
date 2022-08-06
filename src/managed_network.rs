@@ -1,5 +1,4 @@
 #[allow(dead_code)]
-
 use itertools::enumerate;
 use std::cmp::min;
 use std::cmp::Ordering;
@@ -15,9 +14,9 @@ use crate::channel::Channel;
 use crate::ledger_id::LedgerId;
 use crate::managed_node::ManagedNode;
 use crate::managed_node_address::ManagedNodeAddress;
-use crate::node_address::NodeAddress;
 use crate::mirror_node::{ConsensusServiceClientChannel, MirrorNode};
 use crate::node::Node;
+use crate::node_address::NodeAddress;
 
 const MIN_BACKOFF: u64 = 250;
 const MAX_BACKOFF: u64 = 8000;
@@ -160,7 +159,7 @@ impl NetworkNode {
             NetworkNode::Node(n) => {
                 n.address_book = Some(address_book);
                 Ok(())
-            },
+            }
             NetworkNode::Mirror(_) => Err(HederaError::InvalidNodeType),
         }
     }
@@ -345,16 +344,21 @@ impl ManagedNetwork {
         }
     }
 
-    pub async fn set_nodes_address_book(&mut self, address_book: &HashMap<AccountId, NodeAddress>) -> Result<(), HederaError> {
+    pub async fn set_nodes_address_book(
+        &mut self,
+        address_book: &HashMap<AccountId, NodeAddress>,
+    ) -> Result<(), HederaError> {
         let nodes = self.nodes.read().await;
         for node in nodes.iter() {
             let mut n_w = node.write().await;
             let account_id = n_w.account_id()?;
-            let address = address_book.get(&account_id).ok_or(HederaError::InvalidNodeAccountId)?;
+            let address = address_book
+                .get(&account_id)
+                .ok_or(HederaError::InvalidNodeAccountId)?;
             n_w.set_node_address_book(address.clone())?;
         }
         Ok(())
-    }    
+    }
 
     pub async fn network(&self) -> Result<HashMap<String, AccountId>, HederaError> {
         let nodes = self.nodes.read().await;

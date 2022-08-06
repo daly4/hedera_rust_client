@@ -26,7 +26,11 @@ impl FileInfoQuery {
             header: None,
             file_id: None,
         };
-        FileInfoQuery { query, header, services }
+        FileInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_file_id_fns!();

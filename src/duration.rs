@@ -7,7 +7,7 @@ use crate::proto::{services, ToProto};
 impl ToProto<services::Duration> for Duration {
     fn to_proto(&self) -> Result<services::Duration, HederaError> {
         Ok(services::Duration {
-            seconds: self.num_seconds()
+            seconds: self.num_seconds(),
         })
     }
 }

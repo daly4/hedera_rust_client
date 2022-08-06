@@ -20,7 +20,9 @@ fn transaction_record_query_should_retry(status: &Status, response: &Response) -
         return false;
     }
     let mut status: Option<Status> = None;
-    if let Ok(services::response::Response::TransactionGetRecord(ref res)) = response.get_proto_query() {
+    if let Ok(services::response::Response::TransactionGetRecord(ref res)) =
+        response.get_proto_query()
+    {
         if let Some(record) = &res.transaction_record {
             if let Some(receipt) = &record.receipt {
                 status = Status::from_i32(receipt.status);
@@ -68,7 +70,11 @@ impl TransactionRecordQuery {
             include_duplicates: false,
             include_child_records: false,
         };
-        TransactionRecordQuery { query, header, services }
+        TransactionRecordQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_transaction_id_fns!();

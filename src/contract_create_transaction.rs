@@ -1,9 +1,10 @@
+use chrono::Duration;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 use std::convert::TryFrom;
-use chrono::Duration;
 
 use crate::entity_id::validate_option_id_checksum;
 use crate::transaction::Transaction;
+use crate::utils::DEFAULT_DURATION;
 use crate::AccountId;
 use crate::Client;
 use crate::FileId;
@@ -11,7 +12,6 @@ use crate::Hbar;
 use crate::Key;
 use crate::RealmId;
 use crate::ShardId;
-use crate::utils::DEFAULT_DURATION;
 
 use crate::HederaError;
 
@@ -30,7 +30,10 @@ impl ContractCreateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(20.0));
         let mut services = Proto::new();
         services.auto_renew_period = Some(*DEFAULT_DURATION);
-        ContractCreateTransaction { transaction, services }
+        ContractCreateTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

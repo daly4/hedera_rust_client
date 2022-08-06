@@ -19,7 +19,10 @@ impl ScheduleSignTransaction {
     pub fn new() -> ScheduleSignTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(5.0));
         let services = Proto::new();
-        ScheduleSignTransaction { transaction, services }
+        ScheduleSignTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

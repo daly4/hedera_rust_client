@@ -34,7 +34,11 @@ impl ContractCallQuery {
             function_parameters: Vec::new(),
             max_result_size: 0,
         };
-        ContractCallQuery { query, header, services }
+        ContractCallQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_contract_id_fns!();

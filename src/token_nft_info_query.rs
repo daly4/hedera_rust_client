@@ -29,7 +29,11 @@ impl TokenNftInfoQuery {
             header: None,
             nft_id: None,
         };
-        TokenNftInfoQuery { query, header, services }
+        TokenNftInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_nft_id_fns!();

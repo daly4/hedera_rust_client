@@ -1,7 +1,7 @@
 mod utils;
 use hedera_rust_client::{
-    AccountCreateTransaction, AccountDeleteTransaction, Hbar, PrivateKey,
-    TransactionId, AccountInfoQuery, AccountId, NetworkName,
+    AccountCreateTransaction, AccountDeleteTransaction, AccountId, AccountInfoQuery, Hbar,
+    NetworkName, PrivateKey, TransactionId,
 };
 
 #[tokio::test]
@@ -12,12 +12,17 @@ async fn test_account_create_delete() {
     let new_key = PrivateKey::new();
     let initial_balance = Hbar::new(2.0);
     let resp = AccountCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_key(new_key.clone().into()).unwrap()
-        .set_initial_balance(initial_balance).unwrap()
-        .set_max_automatic_token_associations(100).unwrap()
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_key(new_key.clone().into())
+        .unwrap()
+        .set_initial_balance(initial_balance)
+        .unwrap()
+        .set_max_automatic_token_associations(100)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
@@ -27,15 +32,22 @@ async fn test_account_create_delete() {
     ));
 
     let res = AccountDeleteTransaction::new()
-        .set_node_account_ids(vec![resp.node_id]).unwrap()
-        .set_delete_account_id(account_id).unwrap()
-        .set_transfer_account_id(env.client.operator_account_id()).unwrap()
-        .set_transaction_id(TransactionId::generate(account_id)).unwrap()
+        .set_node_account_ids(vec![resp.node_id])
+        .unwrap()
+        .set_delete_account_id(account_id)
+        .unwrap()
+        .set_transfer_account_id(env.client.operator_account_id())
+        .unwrap()
+        .set_transaction_id(TransactionId::generate(account_id))
+        .unwrap()
         .freeze_with(Some(&env.client))
-        .await.unwrap()
-        .sign(&new_key).unwrap()
+        .await
+        .unwrap()
+        .sign(&new_key)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let _receipt = res.get_receipt(&env.client).await.unwrap();
 
@@ -48,8 +60,11 @@ async fn test_account_create_no_key() {
 
     let initial_balance = Hbar::new(2.0);
     let mut resp = AccountCreateTransaction::new();
-    let res = resp.set_initial_balance(initial_balance).unwrap()
-        .set_max_automatic_token_associations(100).unwrap()
+    let res = resp
+        .set_initial_balance(initial_balance)
+        .unwrap()
+        .set_max_automatic_token_associations(100)
+        .unwrap()
         .execute(&client)
         .await;
     assert!(res.is_err());
@@ -63,11 +78,15 @@ async fn test_account_create_set_proxy() {
     let new_key = PrivateKey::new();
     let initial_balance = Hbar::new(2.0);
     let resp = AccountCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_key(new_key.clone().into()).unwrap()
-        .set_initial_balance(initial_balance).unwrap()
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_key(new_key.clone().into())
+        .unwrap()
+        .set_initial_balance(initial_balance)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
@@ -77,12 +96,17 @@ async fn test_account_create_set_proxy() {
     ));
 
     let resp = AccountCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_key(new_key.clone().into()).unwrap()
-        .set_initial_balance(initial_balance).unwrap()
-        .set_proxy_account_id(account_id).unwrap()
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_key(new_key.clone().into())
+        .unwrap()
+        .set_initial_balance(initial_balance)
+        .unwrap()
+        .set_proxy_account_id(account_id)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
@@ -92,26 +116,34 @@ async fn test_account_create_set_proxy() {
     ));
 
     let info = AccountInfoQuery::new()
-        .set_account_id(account_id_2).unwrap()
+        .set_account_id(account_id_2)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
-    let proxy_account_id = info.proxy_account_id.expect(&format!(
-        "no proxy_account_id in account query: {:?}",
-        info
-    ));
+    let proxy_account_id = info
+        .proxy_account_id
+        .expect(&format!("no proxy_account_id in account query: {:?}", info));
     assert_eq!(account_id.to_string(), proxy_account_id.to_string());
 
     let res = AccountDeleteTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_delete_account_id(account_id).unwrap()
-        .set_transfer_account_id(env.client.operator_account_id()).unwrap()
-        .set_transaction_id(TransactionId::generate(account_id)).unwrap()
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_delete_account_id(account_id)
+        .unwrap()
+        .set_transfer_account_id(env.client.operator_account_id())
+        .unwrap()
+        .set_transaction_id(TransactionId::generate(account_id))
+        .unwrap()
         .freeze_with(Some(&env.client))
-        .await.unwrap()
-        .sign(&new_key).unwrap()
+        .await
+        .unwrap()
+        .sign(&new_key)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let _receipt = res.get_receipt(&env.client).await.unwrap();
 
@@ -126,12 +158,15 @@ async fn test_account_create_transaction_network() {
     let new_key = PrivateKey::new();
     let initial_balance = Hbar::new(2.0);
     let resp = AccountCreateTransaction::new()
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_key(new_key.clone().into()).unwrap()
-        .set_initial_balance(initial_balance).unwrap()
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_key(new_key.clone().into())
+        .unwrap()
+        .set_initial_balance(initial_balance)
+        .unwrap()
         .execute(&env.client)
-        .await.unwrap();
-
+        .await
+        .unwrap();
 
     let receipt = resp.get_receipt(&env.client).await.unwrap();
 
@@ -148,10 +183,14 @@ async fn test_account_create_transaction_network() {
 
     let mut tx = AccountDeleteTransaction::new();
     let res = tx
-        .set_node_account_ids(env.node_account_ids.clone()).unwrap()
-        .set_delete_account_id(account_id).unwrap()
-        .set_transfer_account_id(env.client.operator_account_id()).unwrap()
-        .set_transaction_id(TransactionId::generate(account_id)).unwrap()
+        .set_node_account_ids(env.node_account_ids.clone())
+        .unwrap()
+        .set_delete_account_id(account_id)
+        .unwrap()
+        .set_transfer_account_id(env.client.operator_account_id())
+        .unwrap()
+        .set_transaction_id(TransactionId::generate(account_id))
+        .unwrap()
         .freeze_with(Some(&env.client))
         .await;
 

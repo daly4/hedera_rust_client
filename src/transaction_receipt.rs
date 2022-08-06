@@ -29,6 +29,7 @@ pub struct TransactionReceipt {
     pub total_supply: u64,
     pub scheduled_id: Option<ScheduleId>,
     pub scheduled_transaction_id: Option<TransactionId>,
+    pub serial_numbers: Vec<i64>,
 }
 
 impl TryFrom<services::TransactionReceipt> for TransactionReceipt {
@@ -62,6 +63,7 @@ impl TryFrom<services::TransactionReceipt> for TransactionReceipt {
                 Some(v) => Some(TransactionId::try_from(v)?),
                 None => None,
             },
+            serial_numbers: services.serial_numbers,
         })
     }
 }

@@ -31,7 +31,11 @@ impl AccountRecordsQuery {
             header: None,
             account_id: None,
         };
-        AccountRecordsQuery { query, header, services }
+        AccountRecordsQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_account_id_fns!();

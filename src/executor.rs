@@ -3,7 +3,7 @@ use std::cmp::min;
 use std::future::Future;
 use std::pin::Pin;
 use std::time::Duration;
-use tracing::{debug, info, trace, span, Level};
+use tracing::{debug, info, span, trace, Level};
 
 use crate::channel::Channel;
 use crate::client::Client;
@@ -17,7 +17,11 @@ use crate::transaction_response::TransactionResponse;
 use crate::AccountId;
 
 pub type QueryResponseType = Pin<
-    Box<dyn Future<Output = Result<tonic::Response<services::Response>, tonic::Status>> + Send + 'static>,
+    Box<
+        dyn Future<Output = Result<tonic::Response<services::Response>, tonic::Status>>
+            + Send
+            + 'static,
+    >,
 >;
 pub type TransactionResponseType = Pin<
     Box<
@@ -181,7 +185,7 @@ pub async fn execute(
         None => match &request {
             Request::Query(query) => query.max_retry,
             Request::Transaction(transaction) => transaction.max_retry,
-        }
+        },
     };
 
     let mut min_backoff = client.min_backoff();
@@ -189,23 +193,28 @@ pub async fn execute(
     match &request {
         Request::Query(query) => {
             if let Some(backoff) = query.min_backoff {
-                min_backoff = backoff; 
+                min_backoff = backoff;
             }
             if let Some(backoff) = query.max_backoff {
-                max_backoff = backoff; 
+                max_backoff = backoff;
             }
-        },
+        }
         Request::Transaction(transaction) => {
             if let Some(backoff) = transaction.min_backoff {
-                min_backoff = backoff; 
+                min_backoff = backoff;
             }
             if let Some(backoff) = transaction.max_backoff {
-                max_backoff = backoff; 
+                max_backoff = backoff;
             }
         }
     }
 
-    trace!("max_attempts: {}, min_backoff: {}, max_backoff: {}", max_attempts, min_backoff, max_backoff);
+    trace!(
+        "max_attempts: {}, min_backoff: {}, max_backoff: {}",
+        max_attempts,
+        min_backoff,
+        max_backoff
+    );
     for attempt in 1..max_attempts {
         debug!("attempt {}/{}", attempt, max_attempts);
         let node_account_id = get_node_account_id(&request)?;
@@ -297,6 +306,6 @@ pub async fn execute(
 }
 
 pub async fn delay_for_attempt(min_backoff: u64, max_backoff: u64, attempt: u8) {
-    let delay = min(min_backoff*pow(u64::from(attempt), 2), max_backoff);
+    let delay = min(min_backoff * pow(u64::from(attempt), 2), max_backoff);
     tokio::time::sleep(Duration::from_millis(delay)).await;
 }

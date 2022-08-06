@@ -35,7 +35,11 @@ impl AccountBalanceQuery {
             header: None,
             balance_source: None,
         };
-        AccountBalanceQuery { query, header, services }
+        AccountBalanceQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     // SetAccountID sets the AccountID for which you wish to query the balance.

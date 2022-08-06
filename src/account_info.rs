@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Duration, Utc};
 use std::convert::TryFrom;
 
 use crate::error::HederaError;
@@ -27,7 +27,9 @@ pub struct AccountInfo {
 
 impl TryFrom<services::crypto_get_info_response::AccountInfo> for AccountInfo {
     type Error = HederaError;
-    fn try_from(services: services::crypto_get_info_response::AccountInfo) -> Result<AccountInfo, Self::Error> {
+    fn try_from(
+        services: services::crypto_get_info_response::AccountInfo,
+    ) -> Result<AccountInfo, Self::Error> {
         let token_relationships = services
             .token_relationships
             .into_iter()

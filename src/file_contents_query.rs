@@ -24,7 +24,11 @@ impl FileContentsQuery {
             header: None,
             file_id: None,
         };
-        FileContentsQuery { query, header, services }
+        FileContentsQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_file_id_fns!();

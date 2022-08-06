@@ -18,7 +18,10 @@ impl TokenDeleteTransaction {
     pub fn new() -> TokenDeleteTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(30.0));
         let services = Proto::new();
-        TokenDeleteTransaction { transaction, services }
+        TokenDeleteTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

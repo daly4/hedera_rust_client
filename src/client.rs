@@ -142,11 +142,11 @@ impl Client {
             self.min_backoff = min;
         }
     }
-    
+
     pub fn min_backoff(&self) -> u64 {
         self.min_backoff
     }
-    
+
     pub fn set_max_attempts(&mut self, max_attempts: u8) {
         self.max_attempts = Some(max_attempts);
     }
@@ -180,7 +180,8 @@ impl Client {
     }
 
     pub fn set_max_nodes_per_transaction(&mut self, max_nodes_per_transaction: usize) {
-        self.network.set_max_nodes_per_transaction(max_nodes_per_transaction);
+        self.network
+            .set_max_nodes_per_transaction(max_nodes_per_transaction);
     }
 
     pub fn max_nodes_per_transaction(&self) -> Option<usize> {
@@ -223,7 +224,7 @@ impl Client {
     pub fn set_auto_validate_checksums(&mut self, validate: bool) {
         self.auto_validate_checksums = validate;
     }
-    
+
     pub fn auto_validate_checksums(&self) -> bool {
         self.auto_validate_checksums
     }
@@ -252,7 +253,10 @@ impl Client {
         self.network.network().await
     }
 
-    pub async fn set_network(&mut self, network: HashMap<String, AccountId>) -> Result<(), HederaError> {
+    pub async fn set_network(
+        &mut self,
+        network: HashMap<String, AccountId>,
+    ) -> Result<(), HederaError> {
         self.network.set_network(network).await
     }
 
@@ -287,10 +291,7 @@ impl Client {
         self.operator.transaction_signer.clone()
     }
 
-    pub async fn ping(
-        &self,
-        node_account_id: AccountId,
-    ) -> Result<AccountBalance, HederaError> {
+    pub async fn ping(&self, node_account_id: AccountId) -> Result<AccountBalance, HederaError> {
         let balance = AccountBalanceQuery::new()
             .set_account_id(node_account_id)?
             .set_node_account_ids(vec![node_account_id])?

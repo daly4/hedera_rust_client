@@ -1,7 +1,7 @@
 use bytes::Bytes;
+use chrono::Duration;
 use prost::Message;
 use std::convert::{TryFrom, TryInto};
-use chrono::Duration;
 
 use crate::error::HederaError;
 use crate::proto::services::{
@@ -90,7 +90,9 @@ impl TryFrom<services::TransactionBody> for TransactionBody {
             transaction_id: utils::optional_transaction_id(services.transaction_id)?,
             node_account_id: utils::optional_account_id(services.node_account_id)?,
             transaction_fee: services.transaction_fee.try_into()?,
-            transaction_valid_duration: utils::optional_duration(services.transaction_valid_duration)?,
+            transaction_valid_duration: utils::optional_duration(
+                services.transaction_valid_duration,
+            )?,
             generate_record: services.generate_record, // Should a record of this transaction be generated? (A receipt is always generated, but the record is optional)
             memo: services.memo,
             data: services.data,
@@ -106,7 +108,9 @@ impl TryFrom<services::TransactionBody> for TransactionBody {
 // TxData::ScheduleSign(super::ScheduleSignTransactionBody),
 impl TryFrom<TransactionBody> for services::SchedulableTransactionBody {
     type Error = HederaError;
-    fn try_from(tx_body: TransactionBody) -> Result<services::SchedulableTransactionBody, Self::Error> {
+    fn try_from(
+        tx_body: TransactionBody,
+    ) -> Result<services::SchedulableTransactionBody, Self::Error> {
         let data = match tx_body.data {
             Some(v) => {
                 let sch_data = match v {

@@ -18,7 +18,9 @@ pub struct FileInfo {
 
 impl TryFrom<services::file_get_info_response::FileInfo> for FileInfo {
     type Error = crate::error::HederaError;
-    fn try_from(services: services::file_get_info_response::FileInfo) -> Result<FileInfo, Self::Error> {
+    fn try_from(
+        services: services::file_get_info_response::FileInfo,
+    ) -> Result<FileInfo, Self::Error> {
         Ok(FileInfo {
             file_id: utils::non_optional_file_id(services.file_id)?,
             size: services.size,

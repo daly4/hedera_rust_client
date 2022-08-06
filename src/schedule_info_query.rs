@@ -29,7 +29,11 @@ impl ScheduleInfoQuery {
             header: None,
             schedule_id: None,
         };
-        ScheduleInfoQuery { query, header, services }
+        ScheduleInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_schedule_id_fns!();

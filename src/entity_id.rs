@@ -177,12 +177,11 @@ impl ToProto<ProtoRealmId> for RealmId {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::LedgerId;
-    
+
     #[test]
     fn test_checksum() {
         let cs = LedgerId::for_mainnet().for_checksum();
@@ -192,4 +191,3 @@ mod tests {
         checksum(&cs, &format_id(&shard, &realm, &num)).unwrap();
     }
 }
-

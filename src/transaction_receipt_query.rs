@@ -21,7 +21,9 @@ fn transaction_receipt_query_should_retry(status: &Status, response: &Response) 
     }
 
     let mut status: Option<Status> = None;
-    if let Ok(services::response::Response::TransactionGetReceipt(ref res)) = response.get_proto_query() {
+    if let Ok(services::response::Response::TransactionGetReceipt(ref res)) =
+        response.get_proto_query()
+    {
         if let Some(receipt) = &res.receipt {
             status = Status::from_i32(receipt.status);
         }
@@ -68,7 +70,11 @@ impl TransactionReceiptQuery {
             include_duplicates: false,
             include_child_receipts: false,
         };
-        TransactionReceiptQuery { query, header, services }
+        TransactionReceiptQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_transaction_id_fns!();

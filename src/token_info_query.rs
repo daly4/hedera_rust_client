@@ -10,10 +10,7 @@ use crate::token_info::TokenInfo;
 #[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
 #[hedera_derive(
     proto(proto_enum = "TokenGetInfo", response_enum = "TokenGetInfo",),
-    service(
-        method_service_name = "token",
-        method_service_fn = "get_token_info",
-    )
+    service(method_service_name = "token", method_service_fn = "get_token_info",)
 )]
 pub struct TokenInfoQuery {
     query: Query,
@@ -29,7 +26,11 @@ impl TokenInfoQuery {
             header: None,
             token: None,
         };
-        TokenInfoQuery { query, header, services }
+        TokenInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_token_id_fns!();

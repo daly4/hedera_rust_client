@@ -17,7 +17,10 @@ impl LiveHashAddTransaction {
     pub fn new() -> LiveHashAddTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let services = Proto::new();
-        LiveHashAddTransaction { transaction, services }
+        LiveHashAddTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, _client: &Client) -> Result<(), HederaError> {

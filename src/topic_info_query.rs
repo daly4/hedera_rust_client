@@ -27,7 +27,11 @@ impl TopicInfoQuery {
             header: None,
             topic_id: None,
         };
-        TopicInfoQuery { query, header, services }
+        TopicInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_topic_id_fns!();

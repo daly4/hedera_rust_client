@@ -1,6 +1,6 @@
-use chrono::{DateTime, Utc, Duration};
-use std::convert::TryFrom;
+use chrono::{DateTime, Duration, Utc};
 use lazy_static::lazy_static;
+use std::convert::TryFrom;
 
 use crate::key::Key;
 use crate::key_list::KeyList;
@@ -21,7 +21,11 @@ optional_try_from!(optional_duration, services::Duration, Duration);
 optional_try_from!(optional_timestamp, services::Timestamp, DateTime<Utc>);
 optional_try_from!(optional_key, services::Key, Key);
 optional_try_from!(optional_key_list, services::KeyList, KeyList);
-optional_try_from!(optional_transaction_id, services::TransactionId, TransactionId);
+optional_try_from!(
+    optional_transaction_id,
+    services::TransactionId,
+    TransactionId
+);
 optional_try_from!(optional_account_id, services::AccountId, AccountId);
 
 non_optional_try_from!(non_optional_timestamp, services::Timestamp, DateTime<Utc>);

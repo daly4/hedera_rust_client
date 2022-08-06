@@ -22,7 +22,10 @@ impl TokenRevokeKycTransaction {
     pub fn new() -> TokenRevokeKycTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(30.0));
         let services = Proto::new();
-        TokenRevokeKycTransaction { transaction, services }
+        TokenRevokeKycTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

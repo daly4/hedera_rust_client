@@ -26,7 +26,11 @@ impl AccountInfoQuery {
             header: None,
             account_id: None,
         };
-        AccountInfoQuery { query, header, services }
+        AccountInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_account_id_fns!();

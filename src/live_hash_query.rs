@@ -27,7 +27,11 @@ impl LiveHashQuery {
             account_id: None,
             hash: Vec::new(),
         };
-        LiveHashQuery { query, header, services }
+        LiveHashQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_account_id_fns!();

@@ -18,7 +18,10 @@ impl TokenBurnTransaction {
     pub fn new() -> TokenBurnTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let services = Proto::new();
-        TokenBurnTransaction { transaction, services }
+        TokenBurnTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

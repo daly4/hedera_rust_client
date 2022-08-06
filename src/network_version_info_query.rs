@@ -28,7 +28,11 @@ impl NetworkVersionInfoQuery {
         let header = QueryHeader::new();
         let query = Query::new(true);
         let services = services::NetworkGetVersionInfoQuery { header: None };
-        NetworkVersionInfoQuery { query, header, services }
+        NetworkVersionInfoQuery {
+            query,
+            header,
+            services,
+        }
     }
 
     gen_query_execute_with_cost_check!(

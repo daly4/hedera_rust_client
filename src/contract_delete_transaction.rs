@@ -24,7 +24,10 @@ impl ContractDeleteTransaction {
     pub fn new() -> ContractDeleteTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let services = Proto::new();
-        ContractDeleteTransaction { transaction, services }
+        ContractDeleteTransaction {
+            transaction,
+            services,
+        }
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {

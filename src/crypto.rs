@@ -1,12 +1,12 @@
 use bip39::{Language, Mnemonic, MnemonicType, Seed};
 use once_cell::sync::Lazy;
 use rand_chacha::{ChaCha20Core, ChaCha20Rng};
-use rand_core::{SeedableRng, OsRng};
+use rand_core::{OsRng, SeedableRng};
 use serde::de::{self, Deserialize, Deserializer, SeqAccess, Visitor};
 use serde::ser::{Serialize, SerializeTupleStruct, Serializer};
 use simple_asn1::{
     der_decode, der_encode, oid, to_der, ASN1Block, ASN1Class, ASN1DecodeErr, ASN1EncodeErr,
-    FromASN1, ToASN1, OID,
+    FromASN1, ToASN1, OID, BigUint,
 };
 use std::convert::TryFrom;
 use std::fmt::{self, Debug, Display};
@@ -427,7 +427,7 @@ pub struct PrivateKey(ed25519_dalek::SecretKey);
 
 impl PrivateKey {
     pub fn new() -> Self {
-        let mut rng = OsRng{};
+        let mut rng = OsRng {};
         PrivateKey(ed25519_dalek::SecretKey::generate(&mut rng))
     }
     /// Generate a `PrivateKey` with a BIP-39 mnemonic using a cryptographically
