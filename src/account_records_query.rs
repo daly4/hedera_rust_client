@@ -6,7 +6,7 @@ use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::transaction_record::TransactionRecord;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(
         proto_enum = "CryptoGetAccountRecords",
@@ -46,7 +46,7 @@ impl AccountRecordsQuery {
         (|res: services::CryptoGetAccountRecordsResponse| {
             res.records
                 .into_iter()
-                .map(|v| TransactionRecord::try_from(v))
+                .map(TransactionRecord::try_from)
                 .collect::<Result<Vec<TransactionRecord>, crate::error::HederaError>>()
         })
     );

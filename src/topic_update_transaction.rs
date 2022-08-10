@@ -10,7 +10,7 @@ use crate::TopicId;
 use chrono::{DateTime, Duration, Utc};
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "topic", method_service_fn = "update_topic"))]
 pub struct TopicUpdateTransaction {
     transaction: Transaction,
@@ -55,7 +55,7 @@ impl TopicUpdateTransaction {
     gen_transaction_auto_renew_period_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ConsensusUpdateTopic",
     proto_type = "ConsensusUpdateTopicTransactionBody"

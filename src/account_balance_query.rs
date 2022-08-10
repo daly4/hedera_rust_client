@@ -10,7 +10,7 @@ use crate::AccountBalance;
 use crate::AccountId;
 use crate::ContractId;
 
-#[derive(QueryGetCost, QueryExecuteAsync, Debug, Clone)]
+#[derive(QueryGetCost, QueryExecuteAsync, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(
         proto_enum = "CryptogetAccountBalance",
@@ -67,7 +67,7 @@ impl AccountBalanceQuery {
         AccountId,
         account_id,
         (|v: BalanceSource| match v {
-            BalanceSource::AccountId(id) => Ok(AccountId::try_from(id.clone())?),
+            BalanceSource::AccountId(id) => Ok(AccountId::try_from(id)?),
             _ => Err(HederaError::InvalidSetType),
         })
     );
@@ -96,7 +96,7 @@ impl AccountBalanceQuery {
         ContractId,
         contract_id,
         (|v: BalanceSource| match v {
-            BalanceSource::ContractId(id) => Ok(ContractId::from(id.clone())),
+            BalanceSource::ContractId(id) => Ok(ContractId::from(id)),
             _ => Err(HederaError::InvalidSetType),
         })
     );
@@ -104,6 +104,6 @@ impl AccountBalanceQuery {
     gen_query_execute!(
         AccountBalance,
         CryptogetAccountBalance,
-        (|res: services::CryptoGetAccountBalanceResponse| AccountBalance::try_from(res))
+        (AccountBalance::try_from)
     );
 }

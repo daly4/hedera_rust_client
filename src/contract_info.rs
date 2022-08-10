@@ -10,7 +10,7 @@ use crate::AccountId;
 use crate::ContractId;
 use crate::Hbar;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ContractInfo {
     /// ID of the contract instance, in the format used in transactions
     pub contract_id: Option<ContractId>,

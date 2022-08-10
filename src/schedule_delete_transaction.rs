@@ -8,7 +8,7 @@ use crate::Hbar;
 use crate::HederaError;
 use crate::ScheduleId;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "schedule",
     method_service_fn = "delete_schedule"
@@ -36,7 +36,7 @@ impl ScheduleDeleteTransaction {
     gen_transaction_schedule_id_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ScheduleDelete",
     proto_type = "ScheduleDeleteTransactionBody"

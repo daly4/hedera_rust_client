@@ -10,7 +10,7 @@ use crate::AccountId;
 use crate::ScheduleId;
 use crate::TransactionId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ScheduleInfo {
     pub schedule_id: ScheduleId,
     pub creator_account_id: Option<AccountId>,

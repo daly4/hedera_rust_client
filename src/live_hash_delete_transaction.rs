@@ -8,7 +8,7 @@ use crate::Client;
 use crate::Hbar;
 use crate::HederaError;
 
-#[derive(TransactionExecute, Debug, Clone)]
+#[derive(TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "crypto", method_service_fn = "delete_live_hash"))]
 pub struct LiveHashDeleteTransaction {
     transaction: Transaction,
@@ -37,7 +37,7 @@ impl LiveHashDeleteTransaction {
     gen_transaction_live_hash_to_delete_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "CryptoDeleteLiveHash",
     proto_type = "CryptoDeleteLiveHashTransactionBody"

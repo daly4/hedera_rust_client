@@ -6,7 +6,7 @@ use crate::proto::{services, ToProto};
 use crate::query::Query;
 use crate::query_header::QueryHeader;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(
         proto_enum = "NetworkGetVersionInfo",

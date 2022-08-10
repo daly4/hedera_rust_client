@@ -50,8 +50,8 @@ pub fn id_from_string(
 ) -> Result<(i64, i64, i64, Option<IdChecksum>, Option<PublicKey>), HederaError> {
     let id_s;
     let mut checksum: Option<IdChecksum> = None;
-    if s.contains("-") {
-        let sub = s.split("-").collect::<Vec<&str>>();
+    if s.contains('-') {
+        let sub = s.split('-').collect::<Vec<&str>>();
         if sub.len() > 2 {
             return Err(HederaError::UnknownIdChecksumFormat);
         }

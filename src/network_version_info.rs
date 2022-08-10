@@ -3,7 +3,7 @@ use std::convert::TryFrom;
 use crate::error::HederaError;
 use crate::proto::services;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct SemanticVersion {
     /// Increases with incompatible API changes
     pub major: i32,
@@ -23,7 +23,7 @@ impl From<services::SemanticVersion> for SemanticVersion {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct NetworkVersionInfo {
     pub hapi_proto_version: SemanticVersion,
     pub hedera_services_version: SemanticVersion,

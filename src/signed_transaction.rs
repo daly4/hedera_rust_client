@@ -5,7 +5,7 @@ use std::convert::TryFrom;
 use crate::error::HederaError;
 use crate::proto::{services, ToProto};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct SignedTransaction {
     pub body_bytes: Vec<u8>,
     pub sig_map: Option<services::SignatureMap>,

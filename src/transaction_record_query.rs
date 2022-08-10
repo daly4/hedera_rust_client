@@ -1,14 +1,12 @@
 use hedera_derive::QueryExecuteAsyncWithCostCheck;
-use num_traits::FromPrimitive;
 use std::convert::TryFrom;
 
-use crate::error::HederaError;
 use crate::executor::Response;
 use crate::proto::{services, ToProto};
 use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::status::Status;
-use crate::TransactionRecord;
+use crate::TransactionGetRecordResponse;
 
 fn transaction_record_query_should_retry(status: &Status, response: &Response) -> bool {
     let status = *status;
@@ -42,7 +40,7 @@ fn transaction_record_query_should_retry(status: &Status, response: &Response) -
     false
 }
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(
         proto_enum = "TransactionGetRecord",
@@ -84,16 +82,9 @@ impl TransactionRecordQuery {
     gen_query_include_child_records_fns!();
 
     gen_query_execute_with_cost_check!(
-        TransactionRecord,
+        TransactionGetRecordResponse,
         TransactionGetRecord,
-        (|res: services::TransactionGetRecordResponse| {
-            if let Some(record) = res.transaction_record {
-                return TransactionRecord::try_from(record);
-            }
-            Err(HederaError::MissingInProto(
-                "transaction_record".to_string(),
-            ))
-        })
+        (TransactionGetRecordResponse::try_from)
     );
 }
 
@@ -143,10 +134,10 @@ mod tests {
                         automatic_token_associations: [].to_vec(),
                         parent_consensus_timestamp: None,
                         alias: [].to_vec(),
-                        crypto_adjustments: [].to_vec(),
-                        nft_adjustments: [].to_vec(),
-                        token_adjustments: [].to_vec(),
+                        ethereum_hash: [].to_vec(),
+                        paid_staking_rewards: [].to_vec(),
                         body: None,
+                        entropy: None,
                     }),
                     duplicate_transaction_records: [].to_vec(),
                     child_transaction_records: [].to_vec(),

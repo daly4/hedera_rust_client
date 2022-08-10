@@ -5,7 +5,7 @@ use crate::proto::{services, ToProto};
 use crate::query::Query;
 use crate::query_header::QueryHeader;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(proto_enum = "FileGetContents", response_enum = "FileGetContents",),
     service(method_service_name = "file", method_service_fn = "get_file_content",)

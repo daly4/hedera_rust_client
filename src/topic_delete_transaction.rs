@@ -7,7 +7,7 @@ use crate::HederaError;
 use crate::TopicId;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "topic", method_service_fn = "delete_topic"))]
 pub struct TopicDeleteTransaction {
     transaction: Transaction,
@@ -33,7 +33,7 @@ impl TopicDeleteTransaction {
     gen_transaction_topic_id_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ConsensusDeleteTopic",
     proto_type = "ConsensusDeleteTopicTransactionBody"

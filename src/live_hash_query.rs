@@ -7,7 +7,7 @@ use crate::LiveHash;
 use hedera_derive::QueryExecuteAsyncWithCostCheck;
 use std::convert::TryFrom;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(proto_enum = "CryptoGetLiveHash", response_enum = "CryptoGetLiveHash",),
     service(method_service_name = "crypto", method_service_fn = "get_live_hash",)

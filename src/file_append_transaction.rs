@@ -9,7 +9,7 @@ use hedera_derive::{TransactionChunked, TransactionChunkedSchedule, TransactionP
 
 const CHUNK_SIZE: usize = 1024;
 
-#[derive(TransactionChunkedSchedule, TransactionChunked, Debug, Clone)]
+#[derive(TransactionChunkedSchedule, TransactionChunked, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "file", method_service_fn = "append_content"))]
 pub struct FileAppendTransaction {
     transaction: Transaction,
@@ -57,7 +57,7 @@ impl FileAppendTransaction {
     }
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(proto_enum = "FileAppend", proto_type = "FileAppendTransactionBody"))]
 struct Proto {
     #[hedera_derive(to_option_proto)]

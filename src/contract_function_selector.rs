@@ -1,7 +1,7 @@
 use crate::error::HederaError;
 use sha3::{Digest, Keccak256};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ArgumentType {
     Bool,
     String,
@@ -40,13 +40,13 @@ impl ArgumentType {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Solidity {
     pub ty: ArgumentType,
     pub array: bool,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ContractFunctionSelector {
     pub function: Option<String>,
     pub params: String,

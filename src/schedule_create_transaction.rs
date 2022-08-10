@@ -9,7 +9,7 @@ use crate::Client;
 use crate::Hbar;
 use crate::Key;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "schedule",
     method_service_fn = "create_schedule"
@@ -50,7 +50,7 @@ impl ScheduleCreateTransaction {
     gen_transaction_memo_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ScheduleCreate",
     proto_type = "ScheduleCreateTransactionBody"
@@ -62,6 +62,8 @@ struct Proto {
     pub admin_key: Option<Key>,
     #[hedera_derive(to_option_proto)]
     pub payer_account_id: Option<AccountId>,
+    pub expiration_time: Option<services::Timestamp>,
+    pub wait_for_expiry: bool,
 }
 
 impl Proto {
@@ -71,6 +73,8 @@ impl Proto {
             memo: "".to_string(),
             admin_key: None,
             payer_account_id: None,
+            expiration_time: None,
+            wait_for_expiry: false,
         }
     }
 }

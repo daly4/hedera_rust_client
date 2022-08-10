@@ -6,7 +6,7 @@ use crate::Hbar;
 use crate::HederaError;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "crypto", method_service_fn = "crypto_delete"))]
 pub struct AccountDeleteTransaction {
     transaction: Transaction,
@@ -34,7 +34,7 @@ impl AccountDeleteTransaction {
     gen_transaction_transfer_account_id_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "CryptoDelete",
     proto_type = "CryptoDeleteTransactionBody"

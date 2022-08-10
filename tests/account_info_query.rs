@@ -1,11 +1,10 @@
 mod utils;
 use hedera_rust_client::AccountInfoQuery;
-use tracing_subscriber;
 
 #[tokio::test]
 #[ignore]
 async fn test_account_get_info() {
-    tracing_subscriber::fmt::init();
+    
     let env = utils::IntegrationTestEnv::open().await.unwrap();
     let info = AccountInfoQuery::new()
         .set_account_id(env.operator_id)

@@ -7,7 +7,7 @@ use crate::topic_message_chunk::TopicMessageChunk;
 use crate::utils;
 use crate::TransactionId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TopicMessage {
     pub consensus_timestamp: DateTime<Utc>,
     pub contents: Vec<u8>,

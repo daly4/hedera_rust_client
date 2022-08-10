@@ -5,7 +5,7 @@ use crate::topic_info::TopicInfo;
 use hedera_derive::QueryExecuteAsyncWithCostCheck;
 use std::convert::TryFrom;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(
         proto_enum = "ConsensusGetTopicInfo",

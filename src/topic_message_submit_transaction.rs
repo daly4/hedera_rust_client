@@ -9,7 +9,7 @@ use hedera_derive::{TransactionChunked, TransactionChunkedSchedule, TransactionP
 
 const CHUNK_SIZE: usize = 1024;
 
-#[derive(TransactionChunkedSchedule, TransactionChunked, Debug, Clone)]
+#[derive(TransactionChunkedSchedule, TransactionChunked, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "topic", method_service_fn = "submit_message"))]
 pub struct TopicMessageSubmitTransaction {
     transaction: Transaction,
@@ -64,7 +64,7 @@ impl TopicMessageSubmitTransaction {
     }
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ConsensusSubmitMessage",
     proto_type = "ConsensusSubmitMessageTransactionBody"

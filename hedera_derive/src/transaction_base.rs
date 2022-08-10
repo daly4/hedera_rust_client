@@ -140,5 +140,10 @@ pub fn gen_transaction_base(ast: &DeriveInput) -> TokenStream {
                 write!(f, "{}", self.transaction.to_string())
             }
         }
+        impl std::default::Default for #name {
+            fn default() -> Self {
+                Self::new()
+            }
+        }
     }
 }

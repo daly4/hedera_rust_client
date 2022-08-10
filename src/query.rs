@@ -129,7 +129,7 @@ pub fn query_make_payment_transaction(
     })
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Query {
     pub services: services::Query,
 

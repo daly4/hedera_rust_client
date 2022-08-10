@@ -567,6 +567,36 @@ macro_rules! gen_transaction_proxy_account_id_fns {
     };
 }
 
+// decline award
+macro_rules! gen_transaction_decline_award_fns {
+    () => {
+        gen_transaction_get_set_pb_fns!(decline_reward, bool, decline_reward, set_decline_reward);
+    };
+}
+
+macro_rules! gen_transaction_decline_award_option_fns {
+    () => {
+        gen_transaction_get_set_pb_option_fns!(
+            decline_reward,
+            bool,
+            decline_reward,
+            set_decline_reward
+        );
+    };
+}
+
+// staked_id
+macro_rules! gen_transaction_staked_id_option_fns {
+    () => {
+        gen_transaction_get_set_pb_option_fns!(
+            staked_id,
+            crate::staked_id::StakedId,
+            staked_id,
+            set_staked_id
+        );
+    };
+}
+
 // auto_renew_account
 macro_rules! gen_transaction_auto_renew_account_fns {
     () => {
@@ -575,6 +605,29 @@ macro_rules! gen_transaction_auto_renew_account_fns {
             crate::account_id::AccountId,
             auto_renew_account,
             set_auto_renew_account
+        );
+    };
+}
+
+macro_rules! gen_transaction_auto_renew_account_id_fns {
+    () => {
+        gen_transaction_get_set_pb_option_fns!(
+            auto_renew_account_id,
+            crate::account_id::AccountId,
+            auto_renew_account_id,
+            set_auto_renew_account_id
+        );
+    };
+}
+
+// initcode_source
+macro_rules! gen_transaction_initcode_source_option_fns {
+    () => {
+        gen_transaction_get_set_pb_option_fns!(
+            initcode_source,
+            crate::initcode_source::InitcodeSource,
+            initcode_source,
+            set_initcode_source
         );
     };
 }
@@ -1039,6 +1092,18 @@ macro_rules! gen_query_contract_id_fns {
             crate::contract_id::ContractId::from,
             contract_id,
             set_contract_id
+        );
+    };
+}
+
+macro_rules! gen_query_sender_id_option_fns {
+    () => {
+        gen_query_get_set_try_from_proto_fns!(
+            sender_id,
+            crate::account_id::AccountId,
+            crate::account_id::AccountId::try_from,
+            sender_id,
+            set_sender_id
         );
     };
 }

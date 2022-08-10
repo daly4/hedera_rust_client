@@ -10,7 +10,7 @@ use crate::Key;
 use chrono::Duration;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "topic", method_service_fn = "create_topic"))]
 pub struct TopicCreateTransaction {
     transaction: Transaction,
@@ -49,7 +49,7 @@ impl TopicCreateTransaction {
     gen_transaction_auto_renew_period_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ConsensusCreateTopic",
     proto_type = "ConsensusCreateTopicTransactionBody"

@@ -7,7 +7,7 @@ use crate::HederaError;
 use crate::TokenId;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "token", method_service_fn = "mint_token"))]
 pub struct TokenMintTransaction {
     transaction: Transaction,
@@ -39,7 +39,7 @@ impl TokenMintTransaction {
     gen_transaction_metadatas_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(proto_enum = "TokenMint", proto_type = "TokenMintTransactionBody"))]
 struct Proto {
     #[hedera_derive(to_option_proto)]

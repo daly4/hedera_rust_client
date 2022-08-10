@@ -29,6 +29,7 @@ impl From<PbNodeAddress> for NodeAddress {
             addresses.push(endpoint.into());
         }
 
+        #[allow(deprecated)]
         NodeAddress {
             public_key: pb_node_address.rsa_pub_key,
             account_id: pb_node_address

@@ -4,7 +4,7 @@ use crate::error::HederaError;
 use crate::proto::services;
 use crate::TokenId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TokenRelationship {
     pub token_id: TokenId,
     pub symbol: String,

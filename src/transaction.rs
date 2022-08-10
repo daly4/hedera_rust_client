@@ -1,7 +1,6 @@
 use bytes::Bytes;
 use chrono::Duration;
 use itertools::enumerate;
-use num_traits::FromPrimitive;
 use prost::Message;
 use sha3::{Digest, Sha3_384};
 use std::collections::HashMap;
@@ -60,7 +59,7 @@ pub fn transaction_map_response_status(
     let code = transaction.node_transaction_precheck_code;
     match Status::from_i32(code) {
         Some(v) => Ok(v),
-        None => Err(HederaError::InvalidStatusCode(code)),
+        None => Err(HederaError::UnknownHederaStatusCode(code)),
     }
 }
 
@@ -87,7 +86,7 @@ pub fn transaction_map_response(
     }));
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Transaction {
     transaction_body: TransactionBody,
     next_node_index: usize,

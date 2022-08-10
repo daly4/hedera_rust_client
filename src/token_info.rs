@@ -8,7 +8,7 @@ use crate::utils;
 use crate::AccountId;
 use crate::TokenId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TokenInfo {
     /// ID of the token instance
     pub token_id: TokenId,

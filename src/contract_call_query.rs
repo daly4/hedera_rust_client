@@ -8,7 +8,7 @@ use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::Hbar;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(proto_enum = "ContractCallLocal", response_enum = "ContractCallLocal",),
     service(
@@ -33,6 +33,7 @@ impl ContractCallQuery {
             gas: 0,
             function_parameters: Vec::new(),
             max_result_size: 0,
+            sender_id: None,
         };
         ContractCallQuery {
             query,
@@ -51,6 +52,8 @@ impl ContractCallQuery {
         set_function_parameters,
         set_function
     );
+
+    gen_query_sender_id_option_fns!();
 
     gen_query_execute_with_cost_check!(
         ContractFunctionResult, // returns

@@ -4,7 +4,7 @@ use crate::Hbar;
 use crate::TokenId;
 use std::{collections::HashMap, convert::TryFrom};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct AccountBalance {
     pub hbars: Hbar,
     pub token: HashMap<TokenId, u64>,

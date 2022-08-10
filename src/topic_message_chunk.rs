@@ -5,7 +5,7 @@ use crate::error::HederaError;
 use crate::proto::mirror;
 use crate::utils;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TopicMessageChunk {
     pub consensus_timestamp: DateTime<Utc>,
     pub content_size: usize,

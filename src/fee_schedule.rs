@@ -8,7 +8,7 @@ use crate::proto::services::{
 use crate::proto::ToProto;
 use crate::transaction_fee_schedule::TransactionFeeSchedule;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct FeeSchedule {
     pub transaction_fee_schedule: Vec<TransactionFeeSchedule>,
     pub expiry_time: Option<DateTime<Utc>>,

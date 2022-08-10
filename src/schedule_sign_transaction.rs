@@ -8,7 +8,7 @@ use crate::Hbar;
 use crate::HederaError;
 use crate::ScheduleId;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "schedule", method_service_fn = "sign_schedule"))]
 pub struct ScheduleSignTransaction {
     transaction: Transaction,
@@ -33,7 +33,7 @@ impl ScheduleSignTransaction {
     gen_transaction_schedule_id_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ScheduleSign",
     proto_type = "ScheduleSignTransactionBody"

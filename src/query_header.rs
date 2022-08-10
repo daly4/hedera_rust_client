@@ -4,7 +4,7 @@ use crate::error::HederaError;
 use crate::proto::{services, ToProto};
 use crate::response_type::ResponseType;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct QueryHeader {
     pub payment: Option<services::Transaction>,
     pub response_type: ResponseType,

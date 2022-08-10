@@ -8,7 +8,7 @@ use crate::HederaError;
 use crate::TokenId;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "token",
     method_service_fn = "grant_kyc_to_token_account"
@@ -41,7 +41,7 @@ impl TokenGrantKycTransaction {
     gen_transaction_account_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "TokenGrantKyc",
     proto_type = "TokenGrantKycTransactionBody"

@@ -8,7 +8,7 @@ use crate::HederaError;
 use crate::TokenId;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "token",
     method_service_fn = "wipe_token_account"
@@ -47,7 +47,7 @@ impl TokenWipeTransaction {
     gen_transaction_serial_numbers_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "TokenWipe",
     proto_type = "TokenWipeAccountTransactionBody"

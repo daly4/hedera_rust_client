@@ -10,7 +10,7 @@ use crate::ContractId;
 use crate::Hbar;
 use crate::HederaError;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "contract",
     method_service_fn = "delete_contract"
@@ -88,7 +88,7 @@ impl ContractDeleteTransaction {
     );
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ContractDeleteInstance",
     proto_type = "ContractDeleteTransactionBody"
@@ -98,6 +98,7 @@ struct Proto {
     pub contract_id: Option<ContractId>,
     #[hedera_derive(to_proto_with_fn = "obtainer_to_proto")]
     pub obtainers: Option<Obtainers>,
+    pub permanent_removal: bool,
 }
 
 impl Proto {
@@ -105,11 +106,12 @@ impl Proto {
         Proto {
             contract_id: None,
             obtainers: None,
+            permanent_removal: false,
         }
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 enum Obtainers {
     TransferAccountId(AccountId),
     TransferContractId(ContractId),

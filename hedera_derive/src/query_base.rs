@@ -35,5 +35,10 @@ pub fn gen_query_base(ast: &DeriveInput) -> TokenStream {
                 Ok(self)
             }
         }
+        impl std::default::Default for #name {
+            fn default() -> Self {
+                Self::new()
+            }
+        }
     }
 }

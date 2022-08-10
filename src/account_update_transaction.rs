@@ -9,8 +9,9 @@ use crate::Client;
 use crate::Hbar;
 use crate::HederaError;
 use crate::Key;
+use crate::StakedId;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "crypto", method_service_fn = "update_account"))]
 pub struct AccountUpdateTransaction {
     transaction: Transaction,
@@ -33,14 +34,15 @@ impl AccountUpdateTransaction {
     }
     gen_transaction_account_id_to_update_fns!();
     gen_transaction_key_fns!();
-    gen_transaction_proxy_account_id_fns!();
     gen_transaction_auto_renew_period_fns!();
     gen_transaction_expiration_time_fns!();
     gen_transaction_optional_memo_fns!();
     gen_transaction_max_automatic_token_associations_option_fns!();
+    gen_transaction_decline_award_option_fns!();
+    gen_transaction_staked_id_option_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "CryptoUpdateAccount",
     proto_type = "CryptoUpdateTransactionBody"
@@ -59,12 +61,15 @@ struct Proto {
     pub expiration_time: Option<DateTime<Utc>>,
     pub memo: Option<String>,
     pub max_automatic_token_associations: Option<i32>,
+    pub decline_reward: Option<bool>,
     pub send_record_threshold_field:
         Option<services::crypto_update_transaction_body::SendRecordThresholdField>,
     pub receive_record_threshold_field:
         Option<services::crypto_update_transaction_body::ReceiveRecordThresholdField>,
     pub receiver_sig_required_field:
         Option<services::crypto_update_transaction_body::ReceiverSigRequiredField>,
+    #[hedera_derive(to_option_proto)]
+    pub staked_id: Option<StakedId>,
 }
 
 impl Proto {
@@ -78,9 +83,11 @@ impl Proto {
             expiration_time: None,
             memo: None,
             max_automatic_token_associations: None,
+            decline_reward: None,
             send_record_threshold_field: None,
             receive_record_threshold_field: None,
             receiver_sig_required_field: None,
+            staked_id: None,
         }
     }
 }

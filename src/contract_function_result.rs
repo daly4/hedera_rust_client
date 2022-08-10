@@ -8,7 +8,7 @@ use crate::proto::services;
 use crate::utils;
 use crate::ContractId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ContractFunctionResult {
     pub contract_id: ContractId,
     pub contract_call_result: Vec<u8>,

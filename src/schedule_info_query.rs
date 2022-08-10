@@ -7,7 +7,7 @@ use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::schedule_info::ScheduleInfo;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(proto_enum = "ScheduleGetInfo", response_enum = "ScheduleGetInfo",),
     service(

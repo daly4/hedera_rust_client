@@ -6,7 +6,7 @@ use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::transfer::Transfer;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(
         proto_enum = "CryptoGetProxyStakers",
@@ -49,7 +49,7 @@ impl AccountStakersQuery {
                     let stakers = val
                         .proxy_staker
                         .into_iter()
-                        .map(|v| Transfer::try_from(v))
+                        .map(Transfer::try_from)
                         .collect::<Result<Vec<Transfer>, crate::error::HederaError>>();
                     match stakers {
                         Ok(v) => Ok(Some(v)),

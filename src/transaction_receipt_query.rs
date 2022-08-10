@@ -1,5 +1,4 @@
 use hedera_derive::{QueryExecuteAsync, QueryGetCost};
-use num_traits::FromPrimitive;
 use std::convert::TryFrom;
 
 use crate::error::HederaError;
@@ -42,7 +41,7 @@ fn transaction_receipt_query_should_retry(status: &Status, response: &Response) 
     false
 }
 
-#[derive(QueryGetCost, QueryExecuteAsync, Debug, Clone)]
+#[derive(QueryGetCost, QueryExecuteAsync, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(
         proto_enum = "TransactionGetReceipt",
@@ -88,7 +87,7 @@ impl TransactionReceiptQuery {
         TransactionGetReceipt,
         (|res: services::TransactionGetReceiptResponse| {
             if let Some(receipt) = res.receipt {
-                return Ok(TransactionReceipt::try_from(receipt)?);
+                return TransactionReceipt::try_from(receipt);
             }
             Err(HederaError::MissingInProto("receipt".to_string()))
         })

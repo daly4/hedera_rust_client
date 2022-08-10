@@ -9,7 +9,7 @@ use crate::utils;
 use crate::AccountId;
 use crate::Hbar;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct AccountInfo {
     pub account_id: AccountId,
     pub contract_account_id: String,
@@ -35,6 +35,7 @@ impl TryFrom<services::crypto_get_info_response::AccountInfo> for AccountInfo {
             .into_iter()
             .map(|v| TokenRelationship::try_from(v))
             .collect::<Result<Vec<TokenRelationship>, HederaError>>()?;
+        #[allow(deprecated)]
         Ok(AccountInfo {
             account_id: utils::non_optional_account_id(services.account_id)?,
             contract_account_id: services.contract_account_id,

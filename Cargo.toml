@@ -38,7 +38,8 @@ prost = "0.9"
 tracing = "0.1"
 
 [dev-dependencies]
-tracing-subscriber = "0.3"
+tracing-subscriber = {version = "0.3", default-features = false, features = ["env-filter", "fmt"]}
+test-log = { version = "0.2.11", default-features = false, features = ["trace"] }
 dotenv = "0.15.0"
 
 [build-dependencies]

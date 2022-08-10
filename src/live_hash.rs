@@ -7,7 +7,7 @@ use crate::proto::{services, ToProto};
 use crate::utils;
 use crate::AccountId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct LiveHash {
     /// The account to which the livehash is attached
     pub account_id: AccountId,

@@ -9,9 +9,15 @@ use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::time::Duration;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TopicMessageQuery {
     services: mirror::ConsensusTopicQuery,
+}
+
+impl Default for TopicMessageQuery {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl TopicMessageQuery {

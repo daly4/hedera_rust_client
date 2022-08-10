@@ -53,7 +53,7 @@ impl IntegrationTestEnv {
         // prune network
         let mut network = HashMap::new();
         for (address, account_id) in client.network().await.unwrap().into_iter() {
-            if let Ok(_) = client.ping(account_id).await {
+            if (client.ping(account_id).await).is_ok() {
                 network.insert(address, account_id);
             }
         }
@@ -74,10 +74,9 @@ impl IntegrationTestEnv {
             .unwrap();
 
         let receipt = resp.get_receipt(&client).await.unwrap();
-        let account_id = receipt.account_id.expect(&format!(
-            "no account_id in account create receipt: {:?}",
-            receipt
-        ));
+        let account_id = receipt
+            .account_id
+            .unwrap_or_else(|| panic!("no account_id in account create receipt: {:?}", receipt));
 
         let origional_operator_id = client.operator_account_id();
         let origional_operator_key = client.operator_public_key();
@@ -138,10 +137,9 @@ impl IntegrationTestEnv {
             .unwrap();
 
         let receipt = resp.get_receipt(&self.client).await.unwrap();
-        let account_id = receipt.account_id.expect(&format!(
-            "no account_id in account create receipt: {:?}",
-            receipt
-        ));
+        let account_id = receipt
+            .account_id
+            .unwrap_or_else(|| panic!("no account_id in account create receipt: {:?}", receipt));
         Ok((account_id, new_key))
     }
 }

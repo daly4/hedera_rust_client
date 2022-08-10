@@ -5,6 +5,10 @@ use crate::entity_id::validate_id_checksum;
 use crate::proto::{services, ToProto};
 use crate::token_nft_transfer::TokenNftTransfer;
 use crate::token_transfer::TokenTransfer;
+use crate::token_transfer_list::{
+    token_transfer_list_hashmap_to_proto_vec, AccountIdTokenTransferHashMap,
+    TokenIdTokenTransferListHashMap, TokenTransferList,
+};
 use crate::transaction::Transaction;
 use crate::AccountId;
 use crate::Client;
@@ -13,7 +17,7 @@ use crate::HederaError;
 use crate::NftId;
 use crate::TokenId;
 
-#[derive(TransactionExecute, Debug, Clone)]
+#[derive(TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "crypto", method_service_fn = "crypto_transfer"))]
 pub struct TransferTransaction {
     transaction: Transaction,
@@ -38,18 +42,12 @@ impl TransferTransaction {
         }
         for (token_id, tx) in self.services.token_transfers.iter() {
             validate_id_checksum(token_id, client)?;
-            match tx {
-                TokenTransferList::Token(tx) => {
-                    for t in tx.transfers.values() {
-                        validate_id_checksum(&t.account_id, client)?;
-                    }
-                }
-                TokenTransferList::Nft(nfts) => {
-                    for t in nfts.values() {
-                        validate_id_checksum(&t.sender_account_id, client)?;
-                        validate_id_checksum(&t.receiver_account_id, client)?;
-                    }
-                }
+            for t in tx.transfers.values() {
+                validate_id_checksum(&t.account_id, client)?;
+            }
+            for t in tx.nft_transfers.values() {
+                validate_id_checksum(&t.sender_account_id, client)?;
+                validate_id_checksum(&t.receiver_account_id, client)?;
             }
         }
         Ok(())
@@ -62,10 +60,8 @@ impl TransferTransaction {
             return Ok(map);
         }
 
-        for (token_id, token_transfers) in self.services.token_transfers.iter() {
-            if let TokenTransferList::Token(tx) = token_transfers {
-                map.insert(token_id.clone(), tx.transfers.values().cloned().collect());
-            }
+        for (token_id, tx) in self.services.token_transfers.iter() {
+            map.insert(*token_id, tx.transfers.values().cloned().collect());
         }
         Ok(map)
     }
@@ -77,10 +73,8 @@ impl TransferTransaction {
             return Ok(map);
         }
 
-        for (token_id, token_transfers) in self.services.token_transfers.iter() {
-            if let TokenTransferList::Nft(nfts) = token_transfers {
-                map.insert(token_id.clone(), nfts.values().cloned().collect());
-            }
+        for (token_id, tx) in self.services.token_transfers.iter() {
+            map.insert(*token_id, tx.nft_transfers.values().cloned().collect());
         }
         Ok(map)
     }
@@ -133,17 +127,17 @@ impl TransferTransaction {
 
         match self.services.token_transfers.get_mut(&token_id) {
             Some(token_transfer) => {
-                if let TokenTransferList::Token(tx) = token_transfer {
-                    tx.transfers.insert(account_id, amount_transfer);
-                }
+                token_transfer.transfers.insert(account_id, amount_transfer);
             }
             None => {
                 let mut transfers = HashMap::new();
                 transfers.insert(account_id, amount_transfer);
-                let tx = TokenTransferList::Token(TokenTransfers {
+                let tx = TokenTransferList {
+                    token_id,
                     transfers,
                     expected_decimals: decimals,
-                });
+                    nft_transfers: HashMap::new(),
+                };
                 self.services.token_transfers.insert(token_id, tx);
             }
         }
@@ -164,14 +158,19 @@ impl TransferTransaction {
         };
         match self.services.token_transfers.get_mut(&nft_id.token_id) {
             Some(token_transfer) => {
-                if let TokenTransferList::Nft(nfts) = token_transfer {
-                    nfts.insert(nft_id.serial_number, nft_transfer);
-                }
+                token_transfer
+                    .nft_transfers
+                    .insert(nft_id.serial_number, nft_transfer);
             }
             None => {
-                let mut nfts = HashMap::new();
-                nfts.insert(nft_id.serial_number, nft_transfer);
-                let tx = TokenTransferList::Nft(nfts);
+                let mut nft_transfers = HashMap::new();
+                nft_transfers.insert(nft_id.serial_number, nft_transfer);
+                let tx = TokenTransferList {
+                    token_id: nft_id.token_id,
+                    transfers: HashMap::new(),
+                    expected_decimals: None,
+                    nft_transfers,
+                };
                 self.services.token_transfers.insert(nft_id.token_id, tx);
             }
         }
@@ -180,16 +179,16 @@ impl TransferTransaction {
     }
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "CryptoTransfer",
     proto_type = "CryptoTransferTransactionBody"
 ))]
 struct Proto {
-    #[hedera_derive(to_proto_with_fn = "to_transfers")]
-    pub transfers: Option<HashMap<AccountId, TokenTransfer>>,
-    #[hedera_derive(to_proto_with_fn = "to_token_transfers")]
-    pub token_transfers: HashMap<TokenId, TokenTransferList>,
+    #[hedera_derive(to_proto_with_fn = "token_transfer_account_hashmap_to_proto")]
+    pub transfers: Option<AccountIdTokenTransferHashMap>,
+    #[hedera_derive(to_proto_with_fn = "token_transfer_list_hashmap_to_proto_vec")]
+    pub token_transfers: TokenIdTokenTransferListHashMap,
 }
 
 impl Proto {
@@ -201,63 +200,16 @@ impl Proto {
     }
 }
 
-#[derive(Debug, Clone)]
-enum TokenTransferList {
-    Token(TokenTransfers),
-    Nft(HashMap<i64, TokenNftTransfer>),
-}
-
-#[derive(Debug, Clone)]
-pub struct TokenTransfers {
-    pub transfers: HashMap<AccountId, TokenTransfer>,
-    pub expected_decimals: Option<u32>,
-}
-
-fn to_transfers(
-    tx: &Option<HashMap<AccountId, TokenTransfer>>,
+pub fn token_transfer_account_hashmap_to_proto(
+    tx: &Option<AccountIdTokenTransferHashMap>,
 ) -> Result<Option<services::TransferList>, HederaError> {
     match tx {
-        Some(tx) => {
-            let mut account_amounts = Vec::with_capacity(tx.len());
-            for v in tx.values() {
-                account_amounts.push(v.to_proto()?);
-            }
-            Ok(Some(services::TransferList { account_amounts }))
-        }
+        Some(tx) => Ok(Some(services::TransferList {
+            account_amounts: tx
+                .values()
+                .map(|v| v.to_proto())
+                .collect::<Result<Vec<services::AccountAmount>, HederaError>>()?,
+        })),
         None => Ok(None),
     }
-}
-
-fn to_token_transfers(
-    tx: &HashMap<TokenId, TokenTransferList>,
-) -> Result<Vec<services::TokenTransferList>, HederaError> {
-    let mut list = Vec::with_capacity(tx.len());
-    for (k, v) in tx.iter() {
-        let mut services = services::TokenTransferList {
-            token: Some(k.to_proto()?),
-            transfers: Vec::new(),
-            nft_transfers: Vec::new(),
-            expected_decimals: None,
-        };
-
-        match v {
-            TokenTransferList::Token(tx) => {
-                let mut transfers = Vec::with_capacity(tx.transfers.len());
-                for v_t in tx.transfers.values() {
-                    transfers.push(v_t.to_proto()?);
-                }
-                services.transfers = transfers;
-                services.expected_decimals = tx.expected_decimals;
-            }
-            TokenTransferList::Nft(nfts) => {
-                let mut nft_transfers = Vec::with_capacity(nfts.len());
-                for v_t in nfts.values() {
-                    nft_transfers.push(v_t.to_proto()?);
-                }
-                services.nft_transfers = nft_transfers;
-            }
-        }
-        list.push(services);
-    }
-    Ok(list)
 }

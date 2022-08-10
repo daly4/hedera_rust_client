@@ -8,7 +8,7 @@ use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::Hbar;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(proto_enum = "ContractGetInfo", response_enum = "ContractGetInfo",),
     service(

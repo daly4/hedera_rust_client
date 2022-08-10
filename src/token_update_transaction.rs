@@ -10,7 +10,7 @@ use crate::TokenId;
 use chrono::{DateTime, Duration, Utc};
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "token", method_service_fn = "update_token"))]
 pub struct TokenUpdateTransaction {
     transaction: Transaction,
@@ -80,7 +80,7 @@ impl TokenUpdateTransaction {
     gen_transaction_pause_key_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(proto_enum = "TokenUpdate", proto_type = "TokenUpdateTransactionBody"))]
 struct Proto {
     #[hedera_derive(to_option_proto)]

@@ -4,7 +4,7 @@ use std::convert::TryFrom;
 use crate::contract_function_selector::ContractFunctionSelector;
 use crate::error::HederaError;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Argument {
     pub value: Vec<u8>,
     pub dynamic: bool,
@@ -19,7 +19,7 @@ impl Argument {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ContractFunctionParameters {
     function: ContractFunctionSelector,
     arguments: Vec<Argument>,

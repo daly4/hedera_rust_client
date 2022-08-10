@@ -125,7 +125,7 @@ pub fn id_to_solidity_address(shard: i64, realm: i64, num: i64) -> Result<String
     buf.put_i32(s);
     buf.put_i64(realm);
     buf.put_i64(num);
-    Ok(hex::encode(&buf).to_string())
+    Ok(hex::encode(&buf))
 }
 
 pub trait ValidateChecksum {

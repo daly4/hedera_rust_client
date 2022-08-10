@@ -12,8 +12,9 @@ use crate::Hbar;
 use crate::HederaError;
 use crate::RealmId;
 use crate::ShardId;
+use crate::StakedId;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "crypto", method_service_fn = "create_account"))]
 pub struct AccountCreateTransaction {
     transaction: Transaction,
@@ -22,7 +23,7 @@ pub struct AccountCreateTransaction {
 
 impl AccountCreateTransaction {
     pub fn new() -> AccountCreateTransaction {
-        let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
+        let transaction = Transaction::with_max_transaction_fee(Hbar::new(5.0));
         let mut services = Proto::new();
         services.auto_renew_period = Some(*DEFAULT_DURATION);
         AccountCreateTransaction {
@@ -37,21 +38,16 @@ impl AccountCreateTransaction {
     }
 
     gen_transaction_key_fns!();
-
     gen_transaction_initial_balance_u64!();
-
     gen_transaction_auto_renew_period_fns!();
-
-    gen_transaction_proxy_account_id_fns!();
-
     gen_transaction_receiver_sig_required_fns!();
-
     gen_transaction_memo_fns!();
-
     gen_transaction_max_automatic_token_associations_fns!();
+    gen_transaction_decline_award_fns!();
+    gen_transaction_staked_id_option_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "CryptoCreateAccount",
     proto_type = "CryptoCreateTransactionBody"
@@ -75,6 +71,9 @@ struct Proto {
     pub new_realm_admin_key: Option<Key>,
     pub memo: String,
     pub max_automatic_token_associations: i32,
+    pub decline_reward: bool,
+    #[hedera_derive(to_option_proto)]
+    pub staked_id: Option<StakedId>,
 }
 
 impl Proto {
@@ -92,6 +91,8 @@ impl Proto {
             new_realm_admin_key: None,
             memo: "".to_string(),
             max_automatic_token_associations: 0,
+            decline_reward: false,
+            staked_id: None,
         }
     }
 }

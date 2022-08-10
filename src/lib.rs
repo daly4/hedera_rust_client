@@ -45,7 +45,6 @@ mod query_response;
 mod response_type;
 mod schedule_info;
 mod signed_transaction;
-mod status;
 mod timestamp;
 mod token_info;
 mod token_relationship;
@@ -62,6 +61,9 @@ mod utils;
 mod entity_id;
 pub use self::entity_id::{RealmId, ShardId};
 
+mod entropy;
+pub use self::entropy::Entropy;
+
 mod id;
 pub use self::id::IdChecksum;
 
@@ -70,6 +72,9 @@ pub use self::ledger_id::LedgerId;
 
 mod error;
 pub use self::error::HederaError;
+
+mod status;
+pub use self::status::Status;
 
 mod memo;
 pub use self::memo::check_memo_length;
@@ -116,11 +121,17 @@ pub use self::topic_id::TopicId;
 mod token_id;
 pub use self::token_id::TokenId;
 
+mod token_transfer_list;
+pub use self::token_transfer_list::*;
+
 mod file_id;
 pub use self::file_id::FileId;
 
 mod contract_id;
 pub use self::contract_id::ContractId;
+
+mod token_association;
+pub use self::token_association::TokenAssociation;
 
 mod hbar;
 pub use self::hbar::{Hbar, HbarUnit};
@@ -149,6 +160,18 @@ pub use self::transaction_record::TransactionRecord;
 mod fraction;
 pub use self::fraction::Fraction;
 
+mod assessed_custom_fee;
+pub use self::assessed_custom_fee::AssessedCustomFee;
+
+mod staked_id;
+pub use self::staked_id::StakedId;
+
+mod response_header;
+pub use self::response_header::ResponseHeader;
+
+mod transaction_get_record_response;
+pub use self::transaction_get_record_response::TransactionGetRecordResponse;
+
 mod custom_fee;
 pub use self::custom_fee::{CustomFee, Fee};
 
@@ -163,6 +186,9 @@ pub use self::custom_royalty_fee::CustomRoyaltyFee;
 
 mod token_nft_info;
 pub use self::token_nft_info::TokenNftInfo;
+
+mod initcode_source;
+pub use self::initcode_source::InitcodeSource;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Transactions

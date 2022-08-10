@@ -1,7 +1,7 @@
 use crate::network_name::NetworkName;
 use std::fmt;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct LedgerId {
     pub id: Vec<u8>,
 }

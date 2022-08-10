@@ -7,15 +7,16 @@ use crate::transaction::Transaction;
 use crate::utils::DEFAULT_DURATION;
 use crate::AccountId;
 use crate::Client;
-use crate::FileId;
 use crate::Hbar;
+use crate::InitcodeSource;
 use crate::Key;
 use crate::RealmId;
 use crate::ShardId;
+use crate::StakedId;
 
 use crate::HederaError;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "contract",
     method_service_fn = "create_contract"
@@ -37,13 +38,9 @@ impl ContractCreateTransaction {
     }
 
     fn validate_network_on_ids(&self, client: &Client) -> Result<(), HederaError> {
-        validate_option_id_checksum(&self.services.file_id, client)?;
         validate_option_id_checksum(&self.services.proxy_account_id, client)?;
         Ok(())
     }
-
-    // bytecode_file_id
-    gen_transaction_bytecode_file_id_fns!();
 
     gen_transaction_admin_key_fns!();
 
@@ -61,12 +58,6 @@ impl ContractCreateTransaction {
 
     gen_transaction_initial_balance_i64!();
 
-    // SetProxyAccountID sets the ID of the account to which this account is proxy staked. If proxyAccountID is not set,
-    // is an invalID account, or is an account that isn't a node, then this account is automatically proxy staked to a node
-    // chosen by the network, but without earning payments. If the proxyAccountID account refuses to accept proxy staking ,
-    // or if it is not currently running a node, then it will behave as if proxyAccountID was not set.
-    gen_transaction_proxy_account_id_fns!();
-
     // constructor_params
     gen_transaction_contract_params!(
         constructor_parameters,
@@ -74,16 +65,24 @@ impl ContractCreateTransaction {
         set_constructor_parameters_raw,
         set_constructor_parameters
     );
+
+    gen_transaction_max_automatic_token_associations_fns!();
+
+    gen_transaction_auto_renew_account_id_fns!();
+
+    gen_transaction_decline_award_fns!();
+
+    gen_transaction_initcode_source_option_fns!();
+
+    gen_transaction_staked_id_option_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ContractCreateInstance",
     proto_type = "ContractCreateTransactionBody"
 ))]
 struct Proto {
-    #[hedera_derive(to_option_proto)]
-    pub file_id: Option<FileId>,
     #[hedera_derive(to_option_proto)]
     pub admin_key: Option<Key>,
     pub gas: i64,
@@ -100,12 +99,19 @@ struct Proto {
     #[hedera_derive(to_option_proto)]
     pub new_realm_admin_key: Option<Key>,
     pub memo: String,
+    pub max_automatic_token_associations: i32,
+    #[hedera_derive(to_option_proto)]
+    pub auto_renew_account_id: Option<AccountId>,
+    pub decline_reward: bool,
+    #[hedera_derive(to_option_proto)]
+    pub initcode_source: Option<InitcodeSource>,
+    #[hedera_derive(to_option_proto)]
+    pub staked_id: Option<StakedId>,
 }
 
 impl Proto {
     pub fn new() -> Self {
         Proto {
-            file_id: None,
             admin_key: None,
             gas: 0,
             initial_balance: 0,
@@ -116,6 +122,11 @@ impl Proto {
             realm_id: None,
             new_realm_admin_key: None,
             memo: String::new(),
+            max_automatic_token_associations: 0,
+            auto_renew_account_id: None,
+            decline_reward: false,
+            initcode_source: None,
+            staked_id: None,
         }
     }
 }

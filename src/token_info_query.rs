@@ -7,7 +7,7 @@ use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::token_info::TokenInfo;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(proto_enum = "TokenGetInfo", response_enum = "TokenGetInfo",),
     service(method_service_name = "token", method_service_fn = "get_token_info",)

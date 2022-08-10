@@ -51,7 +51,7 @@ impl ToTokens for QueryExecutable {
                     let r = response.get_proto_query()?;
                     if let crate::proto::services::response::Response::#response_enum(ref res) = r {
                         if let Some(h) = &res.header {
-                            let header = crate::query_response::QueryResponseHeader::try_from(h.clone())?;
+                            let header = crate::response_header::ResponseHeader::try_from(h.clone())?;
                             return Ok(crate::query_response::QueryResponse::new(header, Some(r.clone())));
                         }
                         return Err(crate::error::HederaError::NoResponseHeader);

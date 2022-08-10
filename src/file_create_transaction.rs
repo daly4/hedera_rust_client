@@ -10,7 +10,7 @@ use crate::Key;
 use crate::RealmId;
 use crate::ShardId;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "file", method_service_fn = "create_file"))]
 pub struct FileCreateTransaction {
     transaction: Transaction,
@@ -45,7 +45,7 @@ impl FileCreateTransaction {
     gen_transaction_memo_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(proto_enum = "FileCreate", proto_type = "FileCreateTransactionBody"))]
 struct Proto {
     #[hedera_derive(to_option_proto)]

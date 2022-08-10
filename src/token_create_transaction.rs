@@ -13,7 +13,7 @@ use crate::Key;
 use crate::TokenSupplyType;
 use crate::TokenType;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "token", method_service_fn = "create_token"))]
 pub struct TokenCreateTransaction {
     transaction: Transaction,
@@ -105,7 +105,7 @@ impl TokenCreateTransaction {
     gen_transaction_pause_key_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "TokenCreation",
     proto_type = "TokenCreateTransactionBody"

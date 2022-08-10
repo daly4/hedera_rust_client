@@ -8,7 +8,7 @@ use crate::proto::services::{
 };
 use crate::proto::ToProto;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TransactionFeeSchedule {
     pub hedera_functionality: HederaFunctionality,
     pub fee_data: Option<FeeData>,

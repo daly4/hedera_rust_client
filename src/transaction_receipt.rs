@@ -1,4 +1,3 @@
-use num_traits::FromPrimitive;
 use std::convert::TryFrom;
 
 use crate::error::HederaError;
@@ -14,7 +13,7 @@ use crate::TokenId;
 use crate::TopicId;
 use crate::TransactionId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TransactionReceipt {
     pub status: Status,
     pub exchange_rate: Option<ExchangeRate>,
@@ -46,19 +45,19 @@ impl TryFrom<services::TransactionReceipt> for TransactionReceipt {
         Ok(TransactionReceipt {
             status: match Status::from_i32(services.status) {
                 Some(v) => v,
-                None => return Err(HederaError::InvalidStatusCode(services.status)),
+                None => return Err(HederaError::UnknownHederaStatusCode(services.status)),
             },
             exchange_rate,
-            topic_id: services.topic_id.map(|v| TopicId::from(v.clone())),
-            file_id: services.file_id.map(|v| FileId::from(v.clone())),
-            contract_id: services.contract_id.map(|v| ContractId::from(v.clone())),
+            topic_id: services.topic_id.map(TopicId::from),
+            file_id: services.file_id.map(FileId::from),
+            contract_id: services.contract_id.map(ContractId::from),
             account_id: utils::optional_account_id(services.account_id)?,
-            token_id: services.token_id.map(|v| TokenId::from(v.clone())),
+            token_id: services.token_id.map(TokenId::from),
             topic_sequence_num: services.topic_sequence_number,
             topic_running_hash: services.topic_running_hash,
             topic_running_hash_version: services.topic_running_hash_version,
             total_supply: services.new_total_supply,
-            scheduled_id: services.schedule_id.map(|v| ScheduleId::from(v)),
+            scheduled_id: services.schedule_id.map(ScheduleId::from),
             scheduled_transaction_id: match services.scheduled_transaction_id {
                 Some(v) => Some(TransactionId::try_from(v)?),
                 None => None,

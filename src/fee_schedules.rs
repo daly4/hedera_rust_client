@@ -5,7 +5,7 @@ use crate::fee_schedule::FeeSchedule;
 use crate::proto::services::CurrentAndNextFeeSchedule;
 use crate::proto::ToProto;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct FeeSchedules {
     pub current: Option<FeeSchedule>,
     pub next: Option<FeeSchedule>,

@@ -3,7 +3,7 @@ use std::cmp::min;
 use std::future::Future;
 use std::pin::Pin;
 use std::time::Duration;
-use tracing::{debug, info, span, trace, Level};
+use tracing::{debug, info, trace, instrument};
 
 use crate::channel::Channel;
 use crate::client::Client;
@@ -159,7 +159,7 @@ impl IntermediateResponse {
     }
 }
 
-// #[tracing::instrument]
+#[instrument(skip_all)]
 pub async fn execute(
     mut request: Request,
     client: &Client,
@@ -176,8 +176,6 @@ pub async fn execute(
         ProtoRequest,
     ) -> Result<IntermediateResponse, HederaError>,
 ) -> Result<IntermediateResponse, HederaError> {
-    let span = span!(Level::TRACE, "execute");
-    let _enter = span.enter();
 
     // get type
     let max_attempts = match client.max_attempts() {

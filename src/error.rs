@@ -88,8 +88,8 @@ pub enum HederaError {
     #[error("account id contains alias key, unable to convert")]
     UnableToConvertAccountAlias,
 
-    #[error("failed to get status from proto code: {0}")]
-    InvalidStatusCode(i32),
+    #[error("unknown status from code: {0}")]
+    UnknownHederaStatusCode(i32),
 
     #[error("unable to seriaiize signed transaction to bytes: {0}")]
     UnableToSerializeTransaction(prost::EncodeError),

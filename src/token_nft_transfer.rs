@@ -4,7 +4,7 @@ use crate::account_id::AccountId;
 use crate::error::HederaError;
 use crate::proto::{services::NftTransfer, ToProto};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct TokenNftTransfer {
     pub sender_account_id: AccountId,
     pub receiver_account_id: AccountId,

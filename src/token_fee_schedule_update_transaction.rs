@@ -7,7 +7,7 @@ use crate::HederaError;
 use crate::TokenId;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "token",
     method_service_fn = "update_token_fee_schedule"
@@ -42,7 +42,7 @@ impl TokenFeeScheduleUpdateTransaction {
     gen_transaction_custom_fees_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "TokenFeeScheduleUpdate",
     proto_type = "TokenFeeScheduleUpdateTransactionBody"

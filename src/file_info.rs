@@ -6,7 +6,7 @@ use crate::proto::services;
 use crate::utils;
 use crate::FileId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct FileInfo {
     pub file_id: FileId,
     pub size: i64,

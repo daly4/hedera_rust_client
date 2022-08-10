@@ -8,7 +8,7 @@ use crate::ContractId;
 use crate::Hbar;
 use crate::HederaError;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "contract",
     method_service_fn = "contract_call_method"
@@ -51,7 +51,7 @@ impl ContractExecuteTransaction {
     );
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ContractCall",
     proto_type = "ContractCallTransactionBody"

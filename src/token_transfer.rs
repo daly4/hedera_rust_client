@@ -5,7 +5,7 @@ use crate::proto::services::AccountAmount as ProtoAccountAmount;
 use crate::proto::ToProto;
 use crate::AccountId;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct TokenTransfer {
     pub account_id: AccountId,
     pub amount: i64,

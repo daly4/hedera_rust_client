@@ -4,9 +4,10 @@ use rand_chacha::{ChaCha20Core, ChaCha20Rng};
 use rand_core::{OsRng, SeedableRng};
 use serde::de::{self, Deserialize, Deserializer, SeqAccess, Visitor};
 use serde::ser::{Serialize, SerializeTupleStruct, Serializer};
+#[allow(unused_imports)]
 use simple_asn1::{
     der_decode, der_encode, oid, to_der, ASN1Block, ASN1Class, ASN1DecodeErr, ASN1EncodeErr,
-    FromASN1, ToASN1, OID, BigUint,
+    BigUint, FromASN1, ToASN1, OID,
 };
 use std::convert::TryFrom;
 use std::fmt::{self, Debug, Display};

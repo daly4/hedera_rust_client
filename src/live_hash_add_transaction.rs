@@ -6,7 +6,7 @@ use crate::Hbar;
 use crate::HederaError;
 use crate::LiveHash;
 
-#[derive(TransactionExecute, Debug, Clone)]
+#[derive(TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "crypto", method_service_fn = "add_live_hash"))]
 pub struct LiveHashAddTransaction {
     transaction: Transaction,
@@ -31,7 +31,7 @@ impl LiveHashAddTransaction {
     gen_transaction_live_hash_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "CryptoAddLiveHash",
     proto_type = "CryptoAddLiveHashTransactionBody"

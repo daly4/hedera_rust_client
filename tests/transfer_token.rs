@@ -10,7 +10,7 @@ async fn test_transfer_fungible() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     // create token
-    let key: Key = env.client.operator_public_key().into();
+    let _key: Key = env.client.operator_public_key().into();
     let resp = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
         .unwrap()
@@ -37,7 +37,7 @@ async fn test_transfer_fungible() {
     let receipt = resp.get_receipt(&env.client).await.unwrap();
     let token_id = receipt
         .token_id
-        .expect(&format!("no token_id in receipt: {:?}", receipt));
+        .unwrap_or_else(|| panic!("no token_id in receipt: {:?}", receipt));
 
     // create account
     let (to_account_id, _) = env.new_test_account(Hbar::new(2.0)).await.unwrap();
@@ -56,7 +56,7 @@ async fn test_transfer_fungible() {
 
     let from_account_id = env.operator_id;
     let amount = 10i64;
-    let tx = TransferTransaction::new()
+    let _tx = TransferTransaction::new()
         .add_token_transfer(token_id, from_account_id, -amount, None)
         .unwrap()
         .add_token_transfer(token_id, to_account_id, amount, None)
@@ -74,7 +74,8 @@ async fn test_transfer_fungible() {
         .await
         .unwrap();
 
-    let balance = balance_query.token.get(&token_id).unwrap();
+    let balance = balance_query.token.get(&token_id)
+        .unwrap_or_else(|| panic!("no token_id in query: {:?}", balance_query));
     let exp_amount: u64 = amount.try_into().unwrap();
     assert_eq!(balance, &exp_amount);
 
@@ -87,7 +88,7 @@ async fn test_transfer_nonfungible() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     // create token
-    let key: Key = env.client.operator_public_key().into();
+    let _key: Key = env.client.operator_public_key().into();
     let resp = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
         .unwrap()
@@ -120,7 +121,7 @@ async fn test_transfer_nonfungible() {
     let receipt = resp.get_receipt(&env.client).await.unwrap();
     let token_id = receipt
         .token_id
-        .expect(&format!("no token_id in receipt: {:?}", receipt));
+        .unwrap_or_else(|| panic!("no token_id in receipt: {:?}", receipt));
 
     // mint nft
     let metadata = "hello_world".as_bytes().to_vec();
@@ -134,7 +135,8 @@ async fn test_transfer_nonfungible() {
         .unwrap();
 
     let receipt = tx.get_receipt(&env.client).await.unwrap();
-    let serial_number = receipt.serial_numbers.get(0).unwrap();
+    let serial_number = receipt.serial_numbers.get(0)
+        .unwrap_or_else(|| panic!("no serial_numbers in receipt: {:?}", receipt));
 
     // create new account
     let (to_account_id, _) = env.new_test_account(Hbar::new(2.0)).await.unwrap();

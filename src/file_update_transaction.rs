@@ -9,7 +9,7 @@ use crate::HederaError;
 use chrono::{DateTime, Utc};
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "file", method_service_fn = "update_file"))]
 pub struct FileUpdateTransaction {
     transaction: Transaction,
@@ -47,7 +47,7 @@ impl FileUpdateTransaction {
     gen_transaction_optional_memo_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(proto_enum = "FileUpdate", proto_type = "FileUpdateTransactionBody"))]
 struct Proto {
     #[hedera_derive(to_option_proto)]

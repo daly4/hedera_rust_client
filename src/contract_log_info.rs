@@ -4,7 +4,7 @@ use crate::proto::services;
 use crate::utils;
 use crate::ContractId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ContractLogInfo {
     pub contract_id: ContractId,
     pub bloom: Vec<u8>,

@@ -7,7 +7,7 @@ use crate::query::Query;
 use crate::query_header::QueryHeader;
 use crate::token_nft_info::TokenNftInfo;
 
-#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone)]
+#[derive(QueryExecuteAsyncWithCostCheck, Debug, Clone, PartialEq)]
 #[hedera_derive(
     proto(proto_enum = "TokenGetNftInfo", response_enum = "TokenGetNftInfo",),
     service(

@@ -7,7 +7,7 @@ use crate::Hbar;
 use crate::HederaError;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "file", method_service_fn = "delete_file"))]
 pub struct FileDeleteTransaction {
     transaction: Transaction,
@@ -33,7 +33,7 @@ impl FileDeleteTransaction {
     gen_transaction_file_id_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(proto_enum = "FileDelete", proto_type = "FileDeleteTransactionBody"))]
 struct Proto {
     #[hedera_derive(to_option_proto)]

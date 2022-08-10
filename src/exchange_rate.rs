@@ -3,7 +3,7 @@ use std::convert::TryFrom;
 use crate::error::HederaError;
 use crate::proto::services;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ExchangeRate {
     pub hbars: i32,
     pub cents: i32,

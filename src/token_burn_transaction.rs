@@ -7,7 +7,7 @@ use crate::HederaError;
 use crate::TokenId;
 use hedera_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(method_service_name = "token", method_service_fn = "burn_token"))]
 pub struct TokenBurnTransaction {
     transaction: Transaction,
@@ -39,7 +39,7 @@ impl TokenBurnTransaction {
     gen_transaction_serial_numbers_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(proto_enum = "TokenBurn", proto_type = "TokenBurnTransactionBody"))]
 struct Proto {
     #[hedera_derive(to_option_proto)]

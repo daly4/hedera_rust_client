@@ -1,4 +1,3 @@
-use num_traits::FromPrimitive;
 use std::convert::{TryFrom, TryInto};
 
 use crate::error::HederaError;
@@ -8,9 +7,9 @@ use crate::transaction_id::TransactionId;
 use crate::AccountId;
 use crate::Client;
 use crate::Hbar;
+use crate::TransactionGetRecordResponse;
 use crate::TransactionReceipt;
 use crate::TransactionReceiptQuery;
-use crate::TransactionRecord;
 use crate::TransactionRecordQuery;
 
 pub struct HederaResponse {
@@ -25,7 +24,7 @@ impl TryFrom<services::TransactionResponse> for HederaResponse {
         let status = match Status::from_i32(services.node_transaction_precheck_code) {
             Some(v) => v,
             None => {
-                return Err(HederaError::InvalidStatusCode(
+                return Err(HederaError::UnknownHederaStatusCode(
                     services.node_transaction_precheck_code,
                 ))
             }
@@ -37,7 +36,7 @@ impl TryFrom<services::TransactionResponse> for HederaResponse {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct TransactionResponse {
     pub transaction_id: Option<TransactionId>,
     pub scheduled_transaction_id: Option<TransactionId>,
@@ -50,17 +49,20 @@ impl TransactionResponse {
         match &self.transaction_id {
             Some(tx_id) => Ok(TransactionReceiptQuery::new()
                 .set_transaction_id(tx_id.clone())?
-                .set_node_account_ids(vec![self.node_id.clone()])?
+                .set_node_account_ids(vec![self.node_id])?
                 .execute(client)
                 .await?),
             None => Err(HederaError::ValueNotSet("transaction_id".to_string())),
         }
     }
 
-    pub async fn get_record(&self, client: &Client) -> Result<TransactionRecord, HederaError> {
+    pub async fn get_record(
+        &self,
+        client: &Client,
+    ) -> Result<TransactionGetRecordResponse, HederaError> {
         match &self.transaction_id {
             Some(tx_id) => {
-                let node_account_ids = vec![self.node_id.clone()];
+                let node_account_ids = vec![self.node_id];
                 TransactionReceiptQuery::new()
                     .set_transaction_id(tx_id.clone())?
                     .set_node_account_ids(node_account_ids.clone())?

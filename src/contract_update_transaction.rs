@@ -12,8 +12,9 @@ use crate::FileId;
 use crate::Hbar;
 use crate::HederaError;
 use crate::Key;
+use crate::StakedId;
 
-#[derive(TransactionSchedule, TransactionExecute, Debug, Clone)]
+#[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_derive(service(
     method_service_name = "contract",
     method_service_fn = "update_contract"
@@ -58,6 +59,12 @@ impl ContractUpdateTransaction {
     // is the current or past time, then there will be no effect.
     gen_transaction_expiration_time_fns!();
 
+    gen_transaction_max_automatic_token_associations_option_fns!();
+
+    gen_transaction_auto_renew_account_id_fns!();
+
+    gen_transaction_decline_award_option_fns!();
+
     // contract_memo
     gen_get_proto_option_fn!(memo_field, String, contract_memo);
 
@@ -74,9 +81,11 @@ impl ContractUpdateTransaction {
             Ok(Some(contract_memo))
         })
     );
+
+    gen_transaction_staked_id_option_fns!();
 }
 
-#[derive(Debug, Clone, TransactionProto)]
+#[derive(Debug, Clone, PartialEq, TransactionProto)]
 #[hedera_derive(proto(
     proto_enum = "ContractUpdateInstance",
     proto_type = "ContractUpdateTransactionBody"
@@ -94,8 +103,14 @@ struct Proto {
     pub auto_renew_period: Option<Duration>,
     #[hedera_derive(to_option_proto)]
     pub file_id: Option<FileId>,
+    pub max_automatic_token_associations: Option<i32>,
+    #[hedera_derive(to_option_proto)]
+    pub auto_renew_account_id: Option<AccountId>,
+    pub decline_reward: Option<bool>,
     #[hedera_derive(to_proto_with_fn = "memo_proto")]
     pub memo_field: Option<String>,
+    #[hedera_derive(to_option_proto)]
+    pub staked_id: Option<StakedId>,
 }
 
 impl Proto {
@@ -108,6 +123,10 @@ impl Proto {
             auto_renew_period: None,
             file_id: None,
             memo_field: None,
+            max_automatic_token_associations: None,
+            auto_renew_account_id: None,
+            decline_reward: None,
+            staked_id: None,
         }
     }
 }
@@ -115,11 +134,8 @@ impl Proto {
 fn memo_proto(
     memo_field: &Option<String>,
 ) -> Result<Option<services::contract_update_transaction_body::MemoField>, HederaError> {
-    let f = match memo_field {
-        Some(x) => {
-            Some(services::contract_update_transaction_body::MemoField::MemoWrapper(x.clone()))
-        }
-        None => None,
-    };
+    let f = memo_field
+        .as_ref()
+        .map(|x| services::contract_update_transaction_body::MemoField::MemoWrapper(x.clone()));
     Ok(f)
 }
