@@ -3,7 +3,6 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 
 ## IMPORTANT
 
@@ -94,5 +93,3 @@ Project Link: [https://github.com/daly4/hedera_rust_client](https://github.com/d
 [stars-url]: https://github.com/daly4/hedera_rust_client/stargazers
 [issues-shield]: https://img.shields.io/github/issues/daly4/hedera_rust_client
 [issues-url]: https://github.com/daly4/hedera_rust_client/issues
-[license-shield]: https://img.shields.io/github/license/daly4/hedera_rust_client
-[license-url]: https://github.com/daly4/hedera_rust_client/blob/master/LICENSE.txt
