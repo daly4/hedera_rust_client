@@ -7,7 +7,10 @@ use crate::HederaError;
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "crypto", method_service_fn = "crypto_delete"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "crypto",
+    method_service_fn = "crypto_delete"
+))]
 pub struct AccountDeleteTransaction {
     transaction: Transaction,
     services: Proto,

@@ -16,15 +16,18 @@ pub struct FromStructField {
     #[darling(default)]
     to_proto_with_fn: Option<syn::Path>,
     #[darling(default)]
-    rename: Option<syn::Ident>
+    rename: Option<syn::Ident>,
 }
 
 #[derive(Debug, FromDeriveInput)]
-#[darling(attributes(hedera_rust_client_derive), forward_attrs(hedera_rust_client_derive))]
+#[darling(
+    attributes(hedera_rust_client_derive),
+    forward_attrs(hedera_rust_client_derive)
+)]
 pub struct TransactionProto {
     ident: syn::Ident,
     data: ast::Data<util::Ignored, FromStructField>,
-    proto: ProtoTypeFields
+    proto: ProtoTypeFields,
 }
 
 impl ToTokens for TransactionProto {
@@ -32,7 +35,7 @@ impl ToTokens for TransactionProto {
         let TransactionProto {
             ref ident,
             ref data,
-            ref proto
+            ref proto,
         } = &*self;
 
         let proto_type = proto.proto_type();
@@ -87,5 +90,5 @@ impl ToTokens for TransactionProto {
                 }
             }
         });
-    }     
+    }
 }

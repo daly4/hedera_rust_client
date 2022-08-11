@@ -10,7 +10,10 @@ use chrono::{DateTime, Utc};
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "file", method_service_fn = "update_file"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "file",
+    method_service_fn = "update_file"
+))]
 pub struct FileUpdateTransaction {
     transaction: Transaction,
     services: Proto,
@@ -48,7 +51,10 @@ impl FileUpdateTransaction {
 }
 
 #[derive(Debug, Clone, PartialEq, TransactionProto)]
-#[hedera_rust_client_derive(proto(proto_enum = "FileUpdate", proto_type = "FileUpdateTransactionBody"))]
+#[hedera_rust_client_derive(proto(
+    proto_enum = "FileUpdate",
+    proto_type = "FileUpdateTransactionBody"
+))]
 struct Proto {
     #[hedera_rust_client_derive(to_option_proto)]
     pub file_id: Option<FileId>,

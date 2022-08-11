@@ -1,8 +1,6 @@
 use proc_macro2::TokenStream;
-use quote::{quote};
-use syn::{
-    DeriveInput, 
-};
+use quote::quote;
+use syn::DeriveInput;
 
 pub fn gen_query_base(ast: &DeriveInput) -> TokenStream {
     let name = &ast.ident;

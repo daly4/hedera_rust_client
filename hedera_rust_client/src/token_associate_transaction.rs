@@ -9,7 +9,10 @@ use crate::TokenId;
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "token", method_service_fn = "associate_tokens"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "token",
+    method_service_fn = "associate_tokens"
+))]
 pub struct TokenAssociateTransaction {
     transaction: Transaction,
     services: Proto,

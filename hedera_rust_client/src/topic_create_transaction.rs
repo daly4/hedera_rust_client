@@ -11,7 +11,10 @@ use chrono::Duration;
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "topic", method_service_fn = "create_topic"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "topic",
+    method_service_fn = "create_topic"
+))]
 pub struct TopicCreateTransaction {
     transaction: Transaction,
     services: Proto,

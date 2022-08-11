@@ -8,7 +8,10 @@ use crate::TopicId;
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "topic", method_service_fn = "delete_topic"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "topic",
+    method_service_fn = "delete_topic"
+))]
 pub struct TopicDeleteTransaction {
     transaction: Transaction,
     services: Proto,

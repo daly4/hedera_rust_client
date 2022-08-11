@@ -11,7 +11,10 @@ use crate::RealmId;
 use crate::ShardId;
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "file", method_service_fn = "create_file"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "file",
+    method_service_fn = "create_file"
+))]
 pub struct FileCreateTransaction {
     transaction: Transaction,
     services: Proto,
@@ -46,7 +49,10 @@ impl FileCreateTransaction {
 }
 
 #[derive(Debug, Clone, PartialEq, TransactionProto)]
-#[hedera_rust_client_derive(proto(proto_enum = "FileCreate", proto_type = "FileCreateTransactionBody"))]
+#[hedera_rust_client_derive(proto(
+    proto_enum = "FileCreate",
+    proto_type = "FileCreateTransactionBody"
+))]
 struct Proto {
     #[hedera_rust_client_derive(to_option_proto)]
     pub expiration_time: Option<DateTime<Utc>>,

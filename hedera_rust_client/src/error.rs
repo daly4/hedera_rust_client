@@ -8,8 +8,10 @@ use thiserror::Error;
 
 use crate::client::ClientBuilderError;
 use crate::crypto::Asn1Error;
-use crate::status::Status;
 use crate::Hbar;
+use crate::Status;
+use crate::TransactionId;
+use crate::TransactionReceipt;
 
 #[derive(Error, Debug)]
 pub enum HederaError {
@@ -51,6 +53,13 @@ pub enum HederaError {
 
     #[error("return unexpected proto response type: {0}")]
     UnexpectedProtoResponseType(String),
+
+    #[error("receipt for transaction {transaction_id:?} contained error status {status:?} in receipt {transaction_receipt:?}")]
+    ReceiptStatusError {
+        transaction_receipt: TransactionReceipt,
+        status: Status,
+        transaction_id: TransactionId,
+    },
 
     #[error("no result transactions")]
     NoResultTransactions,

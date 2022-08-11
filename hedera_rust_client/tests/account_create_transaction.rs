@@ -4,7 +4,7 @@ use hedera_rust_client::{
     TransactionId,
 };
 
-#[tokio::test]
+#[test_log::test(tokio::test)]
 #[ignore]
 async fn test_account_create_delete() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
@@ -53,7 +53,7 @@ async fn test_account_create_delete() {
     env.close().await.unwrap();
 }
 
-#[tokio::test]
+#[test_log::test(tokio::test)]
 async fn test_account_create_no_key() {
     let client = utils::IntegrationTestEnv::testnet_client().unwrap();
 
@@ -69,7 +69,7 @@ async fn test_account_create_no_key() {
     assert!(res.is_err());
 }
 
-#[tokio::test]
+#[test_log::test(tokio::test)]
 #[ignore]
 async fn test_account_create_transaction_network() {
     let mut env = utils::IntegrationTestEnv::open().await.unwrap();

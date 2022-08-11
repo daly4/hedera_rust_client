@@ -10,7 +10,10 @@ use hedera_rust_client_derive::{TransactionChunked, TransactionChunkedSchedule, 
 const CHUNK_SIZE: usize = 1024;
 
 #[derive(TransactionChunkedSchedule, TransactionChunked, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "topic", method_service_fn = "submit_message"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "topic",
+    method_service_fn = "submit_message"
+))]
 pub struct TopicMessageSubmitTransaction {
     transaction: Transaction,
     services: Proto,

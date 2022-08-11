@@ -10,7 +10,10 @@ use hedera_rust_client_derive::{TransactionChunked, TransactionChunkedSchedule, 
 const CHUNK_SIZE: usize = 1024;
 
 #[derive(TransactionChunkedSchedule, TransactionChunked, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "file", method_service_fn = "append_content"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "file",
+    method_service_fn = "append_content"
+))]
 pub struct FileAppendTransaction {
     transaction: Transaction,
     services: Proto,
@@ -58,7 +61,10 @@ impl FileAppendTransaction {
 }
 
 #[derive(Debug, Clone, PartialEq, TransactionProto)]
-#[hedera_rust_client_derive(proto(proto_enum = "FileAppend", proto_type = "FileAppendTransactionBody"))]
+#[hedera_rust_client_derive(proto(
+    proto_enum = "FileAppend",
+    proto_type = "FileAppendTransactionBody"
+))]
 struct Proto {
     #[hedera_rust_client_derive(to_option_proto)]
     pub file_id: Option<FileId>,

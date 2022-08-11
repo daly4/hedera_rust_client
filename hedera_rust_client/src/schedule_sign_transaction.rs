@@ -9,7 +9,10 @@ use crate::HederaError;
 use crate::ScheduleId;
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "schedule", method_service_fn = "sign_schedule"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "schedule",
+    method_service_fn = "sign_schedule"
+))]
 pub struct ScheduleSignTransaction {
     transaction: Transaction,
     services: Proto,

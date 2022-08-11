@@ -4,7 +4,7 @@ use hedera_rust_client::{
     TokenMintTransaction, TokenSupplyType, TokenType, TransferTransaction,
 };
 
-#[tokio::test]
+#[test_log::test(tokio::test)]
 #[ignore]
 async fn test_transfer_fungible() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
@@ -74,7 +74,9 @@ async fn test_transfer_fungible() {
         .await
         .unwrap();
 
-    let balance = balance_query.token.get(&token_id)
+    let balance = balance_query
+        .token
+        .get(&token_id)
         .unwrap_or_else(|| panic!("no token_id in query: {:?}", balance_query));
     let exp_amount: u64 = amount.try_into().unwrap();
     assert_eq!(balance, &exp_amount);
@@ -135,7 +137,9 @@ async fn test_transfer_nonfungible() {
         .unwrap();
 
     let receipt = tx.get_receipt(&env.client).await.unwrap();
-    let serial_number = receipt.serial_numbers.get(0)
+    let serial_number = receipt
+        .serial_numbers
+        .get(0)
         .unwrap_or_else(|| panic!("no serial_numbers in receipt: {:?}", receipt));
 
     // create new account

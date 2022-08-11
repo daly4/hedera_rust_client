@@ -14,7 +14,10 @@ use crate::TokenSupplyType;
 use crate::TokenType;
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "token", method_service_fn = "create_token"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "token",
+    method_service_fn = "create_token"
+))]
 pub struct TokenCreateTransaction {
     transaction: Transaction,
     services: Proto,

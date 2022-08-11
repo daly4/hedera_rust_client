@@ -1,9 +1,9 @@
 #![allow(dead_code)]
 
-use darling::{FromDeriveInput};
+use darling::FromDeriveInput;
 use quote::{quote, ToTokens};
 
-use crate::utils::{ProtoFields, ExeFields, ServiceFields};
+use crate::utils::{ExeFields, ProtoFields, ServiceFields};
 
 #[derive(Debug, FromDeriveInput)]
 #[darling(attributes(hedera_rust_client_derive), supports(struct_any))]
@@ -78,5 +78,5 @@ impl ToTokens for QueryExecutable {
                 }
             }
         });
-    }     
+    }
 }

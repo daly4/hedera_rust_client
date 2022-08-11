@@ -1,4 +1,5 @@
 use chrono::{DateTime, Duration, Utc};
+use std::collections::HashMap;
 use std::convert::TryFrom;
 
 use crate::error::HederaError;
@@ -8,6 +9,7 @@ use crate::token_relationship::TokenRelationship;
 use crate::utils;
 use crate::AccountId;
 use crate::Hbar;
+use crate::TokenId;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AccountInfo {
@@ -21,7 +23,7 @@ pub struct AccountInfo {
     pub receiver_sig_required: bool,
     pub expiration_time: Option<DateTime<Utc>>,
     pub auto_renew_period: Option<Duration>,
-    pub token_relationships: Vec<TokenRelationship>,
+    pub token_relationships: HashMap<TokenId, TokenRelationship>,
     pub memo: String,
 }
 
@@ -34,7 +36,10 @@ impl TryFrom<services::crypto_get_info_response::AccountInfo> for AccountInfo {
             .token_relationships
             .into_iter()
             .map(|v| TokenRelationship::try_from(v))
-            .collect::<Result<Vec<TokenRelationship>, HederaError>>()?;
+            .collect::<Result<Vec<TokenRelationship>, HederaError>>()?
+            .into_iter()
+            .map(|x| (x.token_id, x))
+            .collect::<HashMap<TokenId, TokenRelationship>>();
         #[allow(deprecated)]
         Ok(AccountInfo {
             account_id: utils::non_optional_account_id(services.account_id)?,

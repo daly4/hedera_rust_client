@@ -1,25 +1,22 @@
+use darling::FromDeriveInput;
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
-use syn::{
-    parse_macro_input, 
-    DeriveInput, 
-};
-use darling::FromDeriveInput;
+use syn::{parse_macro_input, DeriveInput};
 
-mod utils;
 mod id;
 mod query_base;
 mod query_executable;
-mod query_execute_async_with_cost_check;
 mod query_execute_async;
+mod query_execute_async_with_cost_check;
 mod query_get_cost;
 mod transaction_base;
+mod transaction_chunked;
+mod transaction_chunked_schedule;
 mod transaction_executable;
 mod transaction_execute;
-mod transaction_schedule;
-mod transaction_chunked;
 mod transaction_proto;
-mod transaction_chunked_schedule;
+mod transaction_schedule;
+mod utils;
 
 ////////////////////////////////////////////////////////////////////////////////
 // AccountId
@@ -75,10 +72,11 @@ pub fn query_base(input: TokenStream) -> TokenStream {
 ////////////////////////////////////////////////////////////////////////////////
 #[proc_macro_derive(QueryExecutable, attributes(hedera_rust_client_derive))]
 pub fn query_executable(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let output = match query_executable::QueryExecutable::from_derive_input(&parse_macro_input!(input)) {
-        Ok(object_args) => object_args.into_token_stream(),
-        Err(err) => proc_macro2::TokenStream::from(err.write_errors()),
-    };
+    let output =
+        match query_executable::QueryExecutable::from_derive_input(&parse_macro_input!(input)) {
+            Ok(object_args) => object_args.into_token_stream(),
+            Err(err) => proc_macro2::TokenStream::from(err.write_errors()),
+        };
     proc_macro::TokenStream::from(output)
 }
 
@@ -93,7 +91,6 @@ pub fn query_get_cost(input: proc_macro::TokenStream) -> proc_macro::TokenStream
     };
     proc_macro::TokenStream::from(output)
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // QueryExecuteAsync
@@ -117,7 +114,6 @@ pub fn query_execute_async(input: TokenStream) -> TokenStream {
     };
     TokenStream::from(expanded)
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // QueryExecuteAsyncWithCostCheck
@@ -159,19 +155,19 @@ pub fn transaction_base(input: TokenStream) -> TokenStream {
     TokenStream::from(expanded)
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // TransactionExecutable
 ////////////////////////////////////////////////////////////////////////////////
 #[proc_macro_derive(TransactionExecutable, attributes(hedera_rust_client_derive))]
 pub fn transaction_executable(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let output = match transaction_executable::TransactionExecutable::from_derive_input(&parse_macro_input!(input)) {
+    let output = match transaction_executable::TransactionExecutable::from_derive_input(
+        &parse_macro_input!(input),
+    ) {
         Ok(object_args) => object_args.into_token_stream(),
         Err(err) => proc_macro2::TokenStream::from(err.write_errors()),
     };
     proc_macro::TokenStream::from(output)
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // TransactionSchedule
@@ -183,7 +179,6 @@ pub fn transaction_schedule(input: TokenStream) -> TokenStream {
     let expanded = transaction_schedule::gen_transaction_schedule(&ast);
     TokenStream::from(expanded)
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // TransactionExecute
@@ -211,13 +206,13 @@ pub fn transaction_execute(input: TokenStream) -> TokenStream {
 ////////////////////////////////////////////////////////////////////////////////
 #[proc_macro_derive(TransactionProto, attributes(hedera_rust_client_derive))]
 pub fn derive_transaction_proto(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let output = match transaction_proto::TransactionProto::from_derive_input(&parse_macro_input!(input)) {
-        Ok(object_args) => object_args.into_token_stream(),
-        Err(err) => proc_macro2::TokenStream::from(err.write_errors()),
-    };
+    let output =
+        match transaction_proto::TransactionProto::from_derive_input(&parse_macro_input!(input)) {
+            Ok(object_args) => object_args.into_token_stream(),
+            Err(err) => proc_macro2::TokenStream::from(err.write_errors()),
+        };
     proc_macro::TokenStream::from(output)
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // TransactionChunked
@@ -236,7 +231,6 @@ pub fn transaction_chunked(input: TokenStream) -> TokenStream {
     };
     TokenStream::from(expanded)
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // TransactionChunkedSchedule

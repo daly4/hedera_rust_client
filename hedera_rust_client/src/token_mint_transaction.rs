@@ -8,7 +8,10 @@ use crate::TokenId;
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "token", method_service_fn = "mint_token"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "token",
+    method_service_fn = "mint_token"
+))]
 pub struct TokenMintTransaction {
     transaction: Transaction,
     services: Proto,
@@ -40,7 +43,10 @@ impl TokenMintTransaction {
 }
 
 #[derive(Debug, Clone, PartialEq, TransactionProto)]
-#[hedera_rust_client_derive(proto(proto_enum = "TokenMint", proto_type = "TokenMintTransactionBody"))]
+#[hedera_rust_client_derive(proto(
+    proto_enum = "TokenMint",
+    proto_type = "TokenMintTransactionBody"
+))]
 struct Proto {
     #[hedera_rust_client_derive(to_option_proto)]
     pub token: Option<TokenId>,

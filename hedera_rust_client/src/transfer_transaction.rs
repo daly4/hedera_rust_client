@@ -18,7 +18,10 @@ use crate::NftId;
 use crate::TokenId;
 
 #[derive(TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "crypto", method_service_fn = "crypto_transfer"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "crypto",
+    method_service_fn = "crypto_transfer"
+))]
 pub struct TransferTransaction {
     transaction: Transaction,
     services: Proto,

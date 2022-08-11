@@ -8,7 +8,10 @@ use crate::TokenId;
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "token", method_service_fn = "delete_token"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "token",
+    method_service_fn = "delete_token"
+))]
 pub struct TokenDeleteTransaction {
     transaction: Transaction,
     services: Proto,

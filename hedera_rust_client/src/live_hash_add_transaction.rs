@@ -7,7 +7,10 @@ use crate::HederaError;
 use crate::LiveHash;
 
 #[derive(TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "crypto", method_service_fn = "add_live_hash"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "crypto",
+    method_service_fn = "add_live_hash"
+))]
 pub struct LiveHashAddTransaction {
     transaction: Transaction,
     services: Proto,

@@ -1,13 +1,13 @@
 mod utils;
 use chrono::Duration;
 use hedera_rust_client::{
-    Key, PrivateKey, TokenCreateTransaction, TokenInfoQuery, TokenSupplyType, TokenType, Status,
+    Key, PrivateKey, Status, TokenCreateTransaction, TokenFreezeStatus, TokenInfoQuery,
+    TokenKycStatus, TokenSupplyType, TokenType,
 };
 
 #[test_log::test(tokio::test)]
 #[ignore]
 async fn test_token_create() {
-    
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     let key: Key = env.client.operator_public_key().into();
@@ -56,7 +56,6 @@ async fn test_token_create() {
 #[test_log::test(tokio::test)]
 #[ignore]
 async fn test_token_create_multiple_keys() {
-    
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     let n_keys = 4usize;
@@ -113,7 +112,6 @@ async fn test_token_create_multiple_keys() {
 #[test_log::test(tokio::test)]
 #[ignore]
 async fn test_token_create_no_keys() {
-    
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     let resp = TokenCreateTransaction::new()
@@ -156,8 +154,11 @@ async fn test_token_create_no_keys() {
     assert!(info.kyc_key.is_none());
     assert!(info.wipe_key.is_none());
     assert!(info.supply_key.is_none());
-    assert!(!info.default_freeze_status);
-    assert!(!info.default_kyc_status);
+    assert_eq!(
+        info.default_freeze_status,
+        TokenFreezeStatus::FreezeNotApplicable
+    );
+    assert_eq!(info.default_kyc_status, TokenKycStatus::KycNotApplicable);
     assert_eq!(info.auto_renew_period, Some(Duration::seconds(7890000)));
     assert_eq!(info.auto_renew_account, Some(env.operator_id));
     assert!(info.expiry.is_some());
@@ -168,7 +169,6 @@ async fn test_token_create_no_keys() {
 #[test_log::test(tokio::test)]
 #[ignore]
 async fn test_token_no_admin_sign() {
-    
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     let resp = TokenCreateTransaction::new()
@@ -191,9 +191,9 @@ async fn test_token_no_admin_sign() {
         .execute(&env.client)
         .await
         .unwrap();
-    
+
     let receipt = resp.get_receipt(&env.client).await.unwrap();
-    
+
     assert_eq!(receipt.status, Status::InvalidSignature);
 
     env.close().await.unwrap();
@@ -202,7 +202,6 @@ async fn test_token_no_admin_sign() {
 #[test_log::test(tokio::test)]
 #[ignore]
 async fn test_token_nft_create() {
-    
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     let key: Key = env.client.operator_public_key().into();

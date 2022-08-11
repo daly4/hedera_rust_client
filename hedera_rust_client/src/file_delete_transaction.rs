@@ -8,7 +8,10 @@ use crate::HederaError;
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "file", method_service_fn = "delete_file"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "file",
+    method_service_fn = "delete_file"
+))]
 pub struct FileDeleteTransaction {
     transaction: Transaction,
     services: Proto,
@@ -34,7 +37,10 @@ impl FileDeleteTransaction {
 }
 
 #[derive(Debug, Clone, PartialEq, TransactionProto)]
-#[hedera_rust_client_derive(proto(proto_enum = "FileDelete", proto_type = "FileDeleteTransactionBody"))]
+#[hedera_rust_client_derive(proto(
+    proto_enum = "FileDelete",
+    proto_type = "FileDeleteTransactionBody"
+))]
 struct Proto {
     #[hedera_rust_client_derive(to_option_proto)]
     pub file_id: Option<FileId>,

@@ -47,11 +47,24 @@ pub struct TransactionResponse {
 impl TransactionResponse {
     pub async fn get_receipt(&self, client: &Client) -> Result<TransactionReceipt, HederaError> {
         match &self.transaction_id {
-            Some(tx_id) => Ok(TransactionReceiptQuery::new()
-                .set_transaction_id(tx_id.clone())?
-                .set_node_account_ids(vec![self.node_id])?
-                .execute(client)
-                .await?),
+            Some(tx_id) => {
+                let receipt = TransactionReceiptQuery::new()
+                    .set_transaction_id(tx_id.clone())?
+                    .set_node_account_ids(vec![self.node_id])?
+                    .execute(client)
+                    .await?;
+
+                if receipt.status != Status::Success {
+                    let status = receipt.status;
+                    return Err(HederaError::ReceiptStatusError {
+                        transaction_receipt: receipt,
+                        status,
+                        transaction_id: tx_id.clone(),
+                    });
+                }
+
+                Ok(receipt)
+            }
             None => Err(HederaError::ValueNotSet("transaction_id".to_string())),
         }
     }
@@ -62,13 +75,8 @@ impl TransactionResponse {
     ) -> Result<TransactionGetRecordResponse, HederaError> {
         match &self.transaction_id {
             Some(tx_id) => {
+                self.get_receipt(client).await?;
                 let node_account_ids = vec![self.node_id];
-                TransactionReceiptQuery::new()
-                    .set_transaction_id(tx_id.clone())?
-                    .set_node_account_ids(node_account_ids.clone())?
-                    .execute(client)
-                    .await?;
-
                 Ok(TransactionRecordQuery::new()
                     .set_transaction_id(tx_id.clone())?
                     .set_node_account_ids(node_account_ids)?

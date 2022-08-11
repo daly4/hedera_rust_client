@@ -73,6 +73,12 @@ pub use self::ledger_id::LedgerId;
 mod error;
 pub use self::error::HederaError;
 
+mod token_freeze_status;
+pub use self::token_freeze_status::TokenFreezeStatus;
+
+mod token_kyc_status;
+pub use self::token_kyc_status::TokenKycStatus;
+
 mod status;
 pub use self::status::Status;
 

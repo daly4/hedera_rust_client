@@ -12,7 +12,10 @@ use crate::Key;
 use crate::StakedId;
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "crypto", method_service_fn = "update_account"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "crypto",
+    method_service_fn = "update_account"
+))]
 pub struct AccountUpdateTransaction {
     transaction: Transaction,
     services: Proto,

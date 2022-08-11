@@ -6,7 +6,9 @@ use crate::key::Key;
 use crate::proto::services;
 use crate::utils;
 use crate::AccountId;
+use crate::TokenFreezeStatus;
 use crate::TokenId;
+use crate::TokenKycStatus;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct TokenInfo {
@@ -33,9 +35,9 @@ pub struct TokenInfo {
     /// The key which can change the supply of a token. The key is used to sign Token Mint/Burn operations
     pub supply_key: Option<Key>,
     /// The default Freeze status (not applicable, frozen or unfrozen) of Hedera accounts relative to this token. FreezeNotApplicable is returned if Token Freeze Key is empty. Frozen is returned if Token Freeze Key is set and defaultFreeze is set to true. Unfrozen is returned if Token Freeze Key is set and defaultFreeze is set to false
-    pub default_freeze_status: bool,
+    pub default_freeze_status: TokenFreezeStatus,
     /// The default KYC status (KycNotApplicable or Revoked) of Hedera accounts relative to this token. KycNotApplicable is returned if KYC key is not set, otherwise Revoked
-    pub default_kyc_status: bool,
+    pub default_kyc_status: TokenKycStatus,
     /// Specifies whether the token was deleted or not
     pub deleted: bool,
     /// An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
@@ -51,8 +53,10 @@ pub struct TokenInfo {
 impl TryFrom<services::TokenInfo> for TokenInfo {
     type Error = HederaError;
     fn try_from(services: services::TokenInfo) -> Result<TokenInfo, Self::Error> {
-        let default_freeze_status = services.default_freeze_status == 1; // frozen
-        let default_kyc_status = services.default_kyc_status == 1; // granted
+        let default_kyc_status = TokenKycStatus::from_i32(services.default_kyc_status)
+            .ok_or(HederaError::UnexpectedProtoType)?;
+        let default_freeze_status = TokenFreezeStatus::from_i32(services.default_kyc_status)
+            .ok_or(HederaError::UnexpectedProtoType)?;
         Ok(TokenInfo {
             token_id: utils::non_optional_token_id(services.token_id)?,
             name: services.name,

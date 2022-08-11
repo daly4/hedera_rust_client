@@ -1,4 +1,4 @@
-use darling::{FromDeriveInput};
+use darling::FromDeriveInput;
 use quote::{quote, ToTokens};
 
 #[derive(Debug, FromDeriveInput)]
@@ -72,7 +72,7 @@ impl ToTokens for Id {
                 }
             }
         });
-    }     
+    }
 }
 
 #[derive(Debug, FromDeriveInput)]
@@ -113,7 +113,7 @@ impl ToTokens for IdProto {
                 }
             }
         });
-    }     
+    }
 }
 
 #[derive(Debug, FromDeriveInput)]
@@ -153,9 +153,8 @@ impl ToTokens for IdSup {
                 }
             }
         });
-    }     
+    }
 }
-
 
 #[derive(Debug, FromDeriveInput)]
 #[darling(attributes(hedera_rust_client_derive))]
@@ -186,5 +185,5 @@ impl ToTokens for IdValidateChecksum {
                 }
             }
         });
-    }     
+    }
 }

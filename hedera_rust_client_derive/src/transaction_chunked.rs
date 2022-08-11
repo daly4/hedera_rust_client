@@ -1,7 +1,7 @@
-use darling::{FromDeriveInput};
+use darling::FromDeriveInput;
 use quote::{quote, ToTokens};
 
-use crate::utils::{ExeFields, ServiceFields, map_exe};
+use crate::utils::{map_exe, ExeFields, ServiceFields};
 
 #[derive(Debug, FromDeriveInput)]
 #[darling(attributes(hedera_rust_client_derive), supports(struct_any))]
@@ -164,5 +164,5 @@ impl ToTokens for TransactionChunked {
                 }
             }
         });
-    }     
+    }
 }

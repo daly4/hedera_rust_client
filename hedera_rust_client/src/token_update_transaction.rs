@@ -11,7 +11,10 @@ use chrono::{DateTime, Duration, Utc};
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
-#[hedera_rust_client_derive(service(method_service_name = "token", method_service_fn = "update_token"))]
+#[hedera_rust_client_derive(service(
+    method_service_name = "token",
+    method_service_fn = "update_token"
+))]
 pub struct TokenUpdateTransaction {
     transaction: Transaction,
     services: Proto,
@@ -81,7 +84,10 @@ impl TokenUpdateTransaction {
 }
 
 #[derive(Debug, Clone, PartialEq, TransactionProto)]
-#[hedera_rust_client_derive(proto(proto_enum = "TokenUpdate", proto_type = "TokenUpdateTransactionBody"))]
+#[hedera_rust_client_derive(proto(
+    proto_enum = "TokenUpdate",
+    proto_type = "TokenUpdateTransactionBody"
+))]
 struct Proto {
     #[hedera_rust_client_derive(to_option_proto)]
     pub token: Option<TokenId>,

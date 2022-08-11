@@ -73,7 +73,7 @@ pub fn map_exe(
             map_response_status = exe.map_response_status(map_response_status_str);
             should_retry = exe.should_retry(should_retry_str);
             map_response = exe.map_response(map_response_str);
-        }, 
+        }
         None => {
             get_node_account_id = to_path(get_node_account_id_str);
             get_method = to_path(get_method_str);
@@ -111,7 +111,6 @@ impl ProtoTypeFields {
     }
 }
 
-
 #[derive(Debug, Default, FromMeta)]
 #[darling(default)]
 pub struct ProtoFields {
@@ -127,7 +126,6 @@ impl ProtoFields {
         to_ident(&self.response_enum.as_ref().unwrap())
     }
 }
-
 
 #[derive(Debug, Default, FromMeta)]
 #[darling(default)]
