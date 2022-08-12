@@ -1,8 +1,9 @@
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Utc};
 use hedera_rust_client_derive::{TransactionExecute, TransactionProto, TransactionSchedule};
 
 use crate::key_list::KeyList;
 use crate::transaction::Transaction;
+use crate::utils::DEFAULT_AUTO_RENEW_PERIOD;
 use crate::Client;
 use crate::Hbar;
 use crate::HederaError;
@@ -24,7 +25,7 @@ impl FileCreateTransaction {
     pub fn new() -> FileCreateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(5.0));
         let mut services = Proto::new();
-        services.expiration_time = Some(Utc::now() + Duration::seconds(7890000));
+        services.expiration_time = Some(Utc::now() + *DEFAULT_AUTO_RENEW_PERIOD);
         FileCreateTransaction {
             transaction,
             services,

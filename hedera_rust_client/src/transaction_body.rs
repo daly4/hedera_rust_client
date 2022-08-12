@@ -53,6 +53,10 @@ impl TransactionBody {
             Err(e) => Err(HederaError::UnableToDeserializeTransaction(e)),
         }
     }
+
+    pub fn data(&self) -> &Option<TxData> {
+        &self.data
+    }
 }
 
 impl ToProto<services::TransactionBody> for TransactionBody {

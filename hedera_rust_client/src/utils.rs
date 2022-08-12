@@ -14,7 +14,7 @@ use crate::TopicId;
 use crate::TransactionId;
 
 lazy_static! {
-    pub static ref DEFAULT_DURATION: Duration = Duration::seconds(7890000);
+    pub static ref DEFAULT_AUTO_RENEW_PERIOD: Duration = Duration::seconds(7890000);
 }
 
 optional_try_from!(optional_duration, services::Duration, Duration);

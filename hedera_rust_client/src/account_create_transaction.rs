@@ -7,7 +7,7 @@ use crate::client::Client;
 use crate::entity_id::validate_option_id_checksum;
 use crate::key::Key;
 use crate::transaction::Transaction;
-use crate::utils::DEFAULT_DURATION;
+use crate::utils::DEFAULT_AUTO_RENEW_PERIOD;
 use crate::Hbar;
 use crate::HederaError;
 use crate::RealmId;
@@ -28,7 +28,7 @@ impl AccountCreateTransaction {
     pub fn new() -> AccountCreateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(5.0));
         let mut services = Proto::new();
-        services.auto_renew_period = Some(*DEFAULT_DURATION);
+        services.auto_renew_period = Some(*DEFAULT_AUTO_RENEW_PERIOD);
         AccountCreateTransaction {
             transaction,
             services,

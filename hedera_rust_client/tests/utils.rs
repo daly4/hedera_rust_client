@@ -97,16 +97,12 @@ impl IntegrationTestEnv {
     }
 
     pub async fn close_with_token(self, token_id: TokenId) -> Result<(), HederaError> {
-        let res = TokenDeleteTransaction::new()
-            .set_node_account_ids(self.node_account_ids.clone())?
-            .set_token(token_id)?
-            .freeze_with(Some(&self.client))
-            .await?
-            .sign(&self.operator_key)?
+        let _res = TokenDeleteTransaction::new()
+            .set_token_id(token_id)?
             .execute(&self.client)
+            .await?
+            .get_receipt(&self.client)
             .await?;
-
-        let _ = res.get_receipt(&self.client).await?;
         self.close().await
     }
 

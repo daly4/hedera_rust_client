@@ -12,6 +12,15 @@ pub struct NftId {
     pub serial_number: i64,
 }
 
+impl NftId {
+    pub fn new(token_id: TokenId, serial_number: i64) -> Self {
+        NftId {
+            token_id,
+            serial_number,
+        }
+    }
+}
+
 impl TryFrom<ProtoNftId> for NftId {
     type Error = HederaError;
     fn try_from(services: ProtoNftId) -> Result<NftId, Self::Error> {

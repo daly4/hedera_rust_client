@@ -1,7 +1,8 @@
 mod utils;
 use hedera_rust_client::{
     AccountInfoQuery, Hbar, Key, TokenAssociateTransaction, TokenCreateTransaction,
-    TokenFreezeStatus, TokenFreezeTransaction, TokenKycStatus,
+    TokenFreezeStatus, TokenFreezeTransaction, TokenKycStatus, TokenBurnTransaction,
+    TokenInfoQuery, FreezeDefault,
 };
 
 #[test_log::test(tokio::test)]
@@ -10,6 +11,7 @@ async fn test_token_freeze() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     // create token
+    let amount = 1000000u64;
     let key: Key = env.client.operator_public_key().into();
     let resp = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
@@ -20,7 +22,7 @@ async fn test_token_freeze() {
         .unwrap()
         .set_decimals(3)
         .unwrap()
-        .set_initial_supply(1000000)
+        .set_initial_supply(amount)
         .unwrap()
         .set_treasury(env.operator_id)
         .unwrap()
@@ -36,7 +38,7 @@ async fn test_token_freeze() {
         .unwrap()
         .set_supply_key(key)
         .unwrap()
-        .set_freeze_default(false)
+        .set_freeze_default(FreezeDefault::Unfrozen)
         .unwrap()
         .execute(&env.client)
         .await
@@ -46,6 +48,13 @@ async fn test_token_freeze() {
     let token_id = receipt
         .token_id
         .unwrap_or_else(|| panic!("no token_id in receipt: {:?}", receipt));
+
+    let info = TokenInfoQuery::new()
+        .set_token_id(token_id)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap();
 
     // create account
     let (to_account_id, key) = env.new_test_account(Hbar::new(2.0)).await.unwrap();
@@ -69,7 +78,7 @@ async fn test_token_freeze() {
         .unwrap();
 
     let _tx = TokenFreezeTransaction::new()
-        .set_token(token_id)
+        .set_token_id(token_id)
         .unwrap()
         .set_account_id(to_account_id)
         .unwrap()
@@ -96,6 +105,18 @@ async fn test_token_freeze() {
     assert_eq!(relationship.balance, 0);
     assert_eq!(relationship.kyc_status, TokenKycStatus::Revoked);
     assert_eq!(relationship.freeze_status, TokenFreezeStatus::Frozen);
+
+    let _tx = TokenBurnTransaction::new()
+        .set_token_id(token_id)
+        .unwrap()
+        .set_amount(amount)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
+        .unwrap();
 
     env.close_with_token(token_id).await.unwrap();
 }

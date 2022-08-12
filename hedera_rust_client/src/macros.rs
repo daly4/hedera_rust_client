@@ -265,14 +265,21 @@ macro_rules! gen_transaction_expiration_time_fns {
     };
 }
 
-macro_rules! gen_transaction_expiry_time_fns {
+macro_rules! gen_transaction_expiry_auto_renew_fns {
     () => {
-        gen_transaction_get_set_pb_option_fns!(
-            expiry,
-            chrono::DateTime<chrono::Utc>,
-            expiration_time,
-            set_expiration_time
-        );
+        gen_transaction_auto_renew_period_fns!();
+
+        gen_get_proto_option_fn!(expiry, chrono::DateTime<chrono::Utc>, expiration_time);
+
+        pub fn set_expiration_time(
+            &mut self,
+            expiration_time: chrono::DateTime<chrono::Utc>,
+        ) -> Result<&mut Self, crate::error::HederaError> {
+            self.require_not_frozen()?;
+            self.services.auto_renew_period = None;
+            self.services.expiry = Some(expiration_time);
+            Ok(self)
+        }
     };
 }
 
@@ -703,7 +710,12 @@ macro_rules! gen_transaction_contract_id_fns {
 // token
 macro_rules! gen_transaction_token_fns {
     () => {
-        gen_transaction_get_set_pb_option_fns!(token, crate::token_id::TokenId, token, set_token);
+        gen_transaction_get_set_pb_option_fns!(
+            token,
+            crate::token_id::TokenId,
+            token_id,
+            set_token_id
+        );
     };
 }
 
@@ -776,7 +788,7 @@ macro_rules! gen_transaction_amount_fns {
 // freeze_default
 macro_rules! gen_transaction_freeze_default_fns {
     () => {
-        gen_transaction_get_set_pb_fns!(freeze_default, bool, freeze_default, set_freeze_default);
+        gen_transaction_get_set_pb_fns!(freeze_default, crate::freeze_default::FreezeDefault, freeze_default, set_freeze_default);
     };
 }
 
@@ -793,9 +805,18 @@ macro_rules! gen_transaction_live_hash_fns {
 
 macro_rules! gen_transaction_metadatas_fns {
     () => {
-        gen_transaction_get_set_pb_fns!(metadata, Vec<Vec<u8>>, metadatas, set_metadatas);
+        gen_get_proto_fn!(metadata, Vec<Vec<u8>>, metadata);
 
         pub fn set_metadata(
+            &mut self,
+            metadata: Vec<u8>,
+        ) -> Result<&mut Self, crate::error::HederaError> {
+            self.require_not_frozen()?;
+            self.services.metadata = vec![metadata];
+            Ok(self)
+        }
+
+        pub fn add_metadata(
             &mut self,
             metadata: Vec<u8>,
         ) -> Result<&mut Self, crate::error::HederaError> {

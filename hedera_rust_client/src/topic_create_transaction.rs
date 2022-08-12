@@ -1,7 +1,7 @@
 use crate::entity_id::validate_option_id_checksum;
 
 use crate::transaction::Transaction;
-use crate::utils::DEFAULT_DURATION;
+use crate::utils::DEFAULT_AUTO_RENEW_PERIOD;
 use crate::AccountId;
 use crate::Client;
 use crate::Hbar;
@@ -24,7 +24,7 @@ impl TopicCreateTransaction {
     pub fn new() -> TopicCreateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(2.0));
         let mut services = Proto::new();
-        services.auto_renew_period = Some(*DEFAULT_DURATION);
+        services.auto_renew_period = Some(*DEFAULT_AUTO_RENEW_PERIOD);
         TopicCreateTransaction {
             transaction,
             services,

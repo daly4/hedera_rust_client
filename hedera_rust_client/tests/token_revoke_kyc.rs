@@ -1,15 +1,17 @@
 mod utils;
 use hedera_rust_client::{
-    Hbar, Key, NftId, TokenAssociateTransaction, TokenBurnTransaction, TokenCreateTransaction,
-    TokenGrantKycTransaction, TokenMintTransaction, TokenNftInfoQuery, TokenType,
-    TokenWipeTransaction, TransferTransaction, FreezeDefault,
+    AccountInfoQuery, Hbar, Key, TokenAssociateTransaction, TokenCreateTransaction,
+    TokenFreezeStatus, TokenGrantKycTransaction, TokenRevokeKycTransaction, TokenKycStatus,
+    TokenBurnTransaction, FreezeDefault,
 };
 
 #[test_log::test(tokio::test)]
 #[ignore]
-async fn test_token_nft_create() {
+async fn test_token_revoke_kyc() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
+    // create token
+    let amount = 1000000u64;
     let key: Key = env.client.operator_public_key().into();
     let tx = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
@@ -18,9 +20,9 @@ async fn test_token_nft_create() {
         .unwrap()
         .set_symbol("F".to_string())
         .unwrap()
-        .set_memo("fnord".to_string())
+        .set_decimals(3)
         .unwrap()
-        .set_token_type(TokenType::NonFungibleUnique)
+        .set_initial_supply(amount)
         .unwrap()
         .set_treasury(env.operator_id)
         .unwrap()
@@ -47,7 +49,7 @@ async fn test_token_nft_create() {
 
     let token_id = tx
         .token_id
-        .unwrap_or_else(|| panic!("no token_id: {:?}", tx));
+        .unwrap_or_else(|| panic!("no token_id in: {:?}", tx));
 
     // create account
     let (to_account_id, key) = env.new_test_account(Hbar::new(2.0)).await.unwrap();
@@ -82,61 +84,28 @@ async fn test_token_nft_create() {
         .await
         .unwrap();
 
-    //TokenMintTransaction
-    let serials = TokenMintTransaction::new()
-        .set_token_id(token_id)
-        .unwrap()
-        .add_metadata(vec![1u8])
-        .unwrap()
-        .add_metadata(vec![2u8])
-        .unwrap()
-        .execute(&env.client)
-        .await
-        .unwrap()
-        .get_receipt(&env.client)
-        .await
-        .unwrap()
-        .serial_numbers;
-
-    let serial = serials.get(0).unwrap();
-
-    let nft_id = NftId::new(token_id, *serial);
-
-    let info = TokenNftInfoQuery::new()
-        .set_nft_id(nft_id)
+    let info = AccountInfoQuery::new()
+        .set_account_id(to_account_id)
         .unwrap()
         .execute(&env.client)
         .await
         .unwrap();
 
-    assert_eq!(info.account_id, env.operator_id);
+    let relationship = info
+        .token_relationships
+        .get(&token_id)
+        .unwrap_or_else(|| panic!("no token_id in relationships: {:?}", info));
 
-    let _tx = TransferTransaction::new()
-        .add_nft_transfer(nft_id, env.operator_id, to_account_id)
-        .unwrap()
-        .execute(&env.client)
-        .await
-        .unwrap()
-        .get_receipt(&env.client)
-        .await
-        .unwrap();
+    assert_eq!(relationship.token_id, token_id);
+    assert_eq!(relationship.balance, 0);
+    assert_eq!(relationship.kyc_status, TokenKycStatus::Granted);
+    assert_eq!(relationship.freeze_status, TokenFreezeStatus::Unfrozen);
 
-    let info = TokenNftInfoQuery::new()
-        .set_nft_id(nft_id)
-        .unwrap()
-        .execute(&env.client)
-        .await
-        .unwrap();
-
-    assert_eq!(info.account_id, to_account_id);
-
-    let _tx = TokenWipeTransaction::new()
+    let _tx = TokenRevokeKycTransaction::new()
         .set_token_id(token_id)
         .unwrap()
         .set_account_id(to_account_id)
         .unwrap()
-        .set_serial_numbers(vec![*serial])
-        .unwrap()
         .execute(&env.client)
         .await
         .unwrap()
@@ -144,12 +113,27 @@ async fn test_token_nft_create() {
         .await
         .unwrap();
 
-    let serial = serials.get(1).unwrap();
+    let info = AccountInfoQuery::new()
+        .set_account_id(to_account_id)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap();
+
+    let relationship = info
+        .token_relationships
+        .get(&token_id)
+        .unwrap_or_else(|| panic!("no token_id in relationships: {:?}", info));
+
+    assert_eq!(relationship.token_id, token_id);
+    assert_eq!(relationship.balance, 0);
+    assert_eq!(relationship.kyc_status, TokenKycStatus::Revoked);
+    assert_eq!(relationship.freeze_status, TokenFreezeStatus::Unfrozen);
 
     let _tx = TokenBurnTransaction::new()
         .set_token_id(token_id)
         .unwrap()
-        .set_serial_numbers(vec![*serial])
+        .set_amount(amount)
         .unwrap()
         .execute(&env.client)
         .await

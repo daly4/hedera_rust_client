@@ -71,12 +71,12 @@ async fn test_account_create_no_key() {
 
 #[test_log::test(tokio::test)]
 #[ignore]
-async fn test_account_create_transaction_network() {
+async fn test_account_create_bad_network() {
     let mut env = utils::IntegrationTestEnv::open().await.unwrap();
 
     let new_key = PrivateKey::new();
     let initial_balance = Hbar::new(2.0);
-    let resp = AccountCreateTransaction::new()
+    let tx = AccountCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
         .unwrap()
         .set_key(new_key.clone().into())
@@ -85,13 +85,14 @@ async fn test_account_create_transaction_network() {
         .unwrap()
         .execute(&env.client)
         .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
         .unwrap();
 
-    let receipt = resp.get_receipt(&env.client).await.unwrap();
-
-    let account_id = receipt
+    let account_id = tx
         .account_id
-        .unwrap_or_else(|| panic!("no account_id in account create receipt: {:?}", receipt));
+        .unwrap_or_else(|| panic!("no account_id in receipt: {:?}", tx));
 
     env.client.set_auto_validate_checksums(true);
 

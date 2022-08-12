@@ -522,6 +522,10 @@ impl Transaction {
         }
         Ok(scheduled)
     }
+
+    pub fn body(&self) -> &TransactionBody {
+        &self.transaction_body
+    }
 }
 
 impl Display for Transaction {

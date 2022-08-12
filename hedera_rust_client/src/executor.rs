@@ -3,7 +3,7 @@ use std::cmp::min;
 use std::future::Future;
 use std::pin::Pin;
 use std::time::Duration;
-use tracing::{debug, info, instrument, trace};
+use tracing::{debug, instrument, trace};
 
 use crate::channel::Channel;
 use crate::client::Client;
@@ -39,6 +39,12 @@ pub enum Method {
 }
 
 #[derive(Debug)]
+pub enum RequestProtoData<'a> {
+    Query(&'a Option<services::query::Query>),
+    Transaction(&'a Option<services::transaction_body::Data>),
+}
+
+#[derive(Debug)]
 pub enum Request {
     Query(Query),
     Transaction(Transaction),
@@ -46,30 +52,37 @@ pub enum Request {
 
 impl Request {
     pub fn get_query(&self) -> Result<&Query, HederaError> {
-        match *self {
-            Request::Query(ref query) => Ok(query),
+        match &self {
+            Request::Query(query) => Ok(query),
             _ => Err(HederaError::QueryRequestTypeError),
         }
     }
 
     pub fn get_transaction(&self) -> Result<&Transaction, HederaError> {
-        match *self {
-            Request::Transaction(ref tx) => Ok(tx),
+        match &self {
+            Request::Transaction(tx) => Ok(tx),
             _ => Err(HederaError::TransactionRequestTypeError),
         }
     }
 
     pub fn get_query_mut(&mut self) -> Result<&mut Query, HederaError> {
-        match *self {
-            Request::Query(ref mut query) => Ok(query),
+        match self {
+            Request::Query(query) => Ok(query),
             _ => Err(HederaError::QueryRequestTypeError),
         }
     }
 
     pub fn get_transaction_mut(&mut self) -> Result<&mut Transaction, HederaError> {
-        match *self {
-            Request::Transaction(ref mut tx) => Ok(tx),
+        match self {
+            Request::Transaction(tx) => Ok(tx),
             _ => Err(HederaError::TransactionRequestTypeError),
+        }
+    }
+
+    pub fn proto_data(&self) -> RequestProtoData {
+        match &self {
+            Request::Query(q) => RequestProtoData::Query(&q.services.query),
+            Request::Transaction(t) => RequestProtoData::Transaction(t.body().data()),
         }
     }
 }
@@ -82,15 +95,15 @@ pub enum ProtoRequest {
 
 impl ProtoRequest {
     pub fn get_query(&self) -> Result<&services::Query, HederaError> {
-        match *self {
+        match &self {
             ProtoRequest::Query(ref query) => Ok(query),
             _ => Err(HederaError::QueryRequestTypeError),
         }
     }
 
     pub fn get_transaction(&self) -> Result<&services::Transaction, HederaError> {
-        match *self {
-            ProtoRequest::Transaction(ref tx) => Ok(tx),
+        match &self {
+            ProtoRequest::Transaction(tx) => Ok(tx),
             _ => Err(HederaError::TransactionRequestTypeError),
         }
     }
@@ -104,8 +117,8 @@ pub enum Response {
 
 impl Response {
     pub fn get_proto_query(&self) -> Result<&services::response::Response, HederaError> {
-        match *self {
-            Response::Query(ref r) => {
+        match &self {
+            Response::Query(r) => {
                 if let Some(ref response) = r.response {
                     Ok(response)
                 } else {
@@ -117,8 +130,8 @@ impl Response {
     }
 
     pub fn get_transaction(&self) -> Result<&services::TransactionResponse, HederaError> {
-        match *self {
-            Response::Transaction(ref v) => Ok(v),
+        match &self {
+            Response::Transaction(v) => Ok(v),
             _ => Err(HederaError::NoTransactionResponse),
         }
     }
@@ -176,6 +189,9 @@ pub async fn execute(
         ProtoRequest,
     ) -> Result<IntermediateResponse, HederaError>,
 ) -> Result<IntermediateResponse, HederaError> {
+
+    trace!("PROTO_DATA: {:?}", request.proto_data());
+
     // get type
     let max_attempts = match client.max_attempts() {
         Some(max) => max,
@@ -213,7 +229,7 @@ pub async fn execute(
         max_backoff
     );
     for attempt in 1..max_attempts {
-        debug!("attempt {}/{}", attempt, max_attempts);
+        trace!("attempt {}/{}", attempt, max_attempts);
         let node_account_id = get_node_account_id(&request)?;
 
         let node = client.node_for_account_id(&node_account_id).await?;
@@ -224,7 +240,7 @@ pub async fn execute(
         if !node_lock.is_healthy() {
             let wait = node_lock.wait();
             drop(node_lock);
-            info!("node {} was not healthy", node_account_id);
+            debug!("node {} was not healthy", node_account_id);
             tokio::time::sleep(wait).await;
         } else {
             drop(node_lock);
@@ -288,7 +304,7 @@ pub async fn execute(
         let response_status = map_response_status(&request, &response)?;
 
         if should_retry(&response_status, &response) && attempt <= max_attempts {
-            debug!("will retry on attempt {}/{}", attempt, max_attempts);
+            trace!("will retry on attempt {}/{}", attempt, max_attempts);
             delay_for_attempt(min_backoff, max_backoff, attempt).await;
             continue;
         }

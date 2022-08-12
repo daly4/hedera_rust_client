@@ -3,7 +3,7 @@ use hedera_rust_client_derive::{TransactionExecute, TransactionProto, Transactio
 
 use crate::entity_id::{validate_option_id_checksum, ValidateChecksum};
 use crate::transaction::Transaction;
-use crate::utils::DEFAULT_DURATION;
+use crate::utils::DEFAULT_AUTO_RENEW_PERIOD;
 use crate::AccountId;
 use crate::Client;
 use crate::CustomFee;
@@ -12,6 +12,7 @@ use crate::HederaError;
 use crate::Key;
 use crate::TokenSupplyType;
 use crate::TokenType;
+use crate::FreezeDefault;
 
 #[derive(TransactionSchedule, TransactionExecute, Debug, Clone, PartialEq)]
 #[hedera_rust_client_derive(service(
@@ -27,8 +28,7 @@ impl TokenCreateTransaction {
     pub fn new() -> TokenCreateTransaction {
         let transaction = Transaction::with_max_transaction_fee(Hbar::new(30.0));
         let mut services = Proto::new();
-        services.auto_renew_period = Some(*DEFAULT_DURATION); //min
-        services.expiry = Some(Utc::now() + *DEFAULT_DURATION);
+        services.auto_renew_period = Some(*DEFAULT_AUTO_RENEW_PERIOD);
         TokenCreateTransaction {
             transaction,
             services,
@@ -78,13 +78,10 @@ impl TokenCreateTransaction {
     gen_transaction_freeze_default_fns!();
 
     // expiry -> expiration_time/set_expiration_time
-    gen_transaction_expiry_time_fns!();
+    gen_transaction_expiry_auto_renew_fns!();
 
     // auto_renew_account
     gen_transaction_auto_renew_account_fns!();
-
-    // auto_renew_period
-    gen_transaction_auto_renew_period_fns!();
 
     // memo
     gen_transaction_memo_fns!();
@@ -130,7 +127,8 @@ struct Proto {
     pub wipe_key: Option<Key>,
     #[hedera_rust_client_derive(to_option_proto)]
     pub supply_key: Option<Key>,
-    pub freeze_default: bool,
+    #[hedera_rust_client_derive(to_proto)]
+    pub freeze_default: FreezeDefault,
     #[hedera_rust_client_derive(to_option_proto)]
     pub expiry: Option<DateTime<Utc>>,
     #[hedera_rust_client_derive(to_option_proto)]
@@ -164,7 +162,7 @@ impl Proto {
             freeze_key: None,
             wipe_key: None,
             supply_key: None,
-            freeze_default: false,
+            freeze_default: FreezeDefault::Unfrozen,
             expiry: None,
             auto_renew_account: None,
             auto_renew_period: None,

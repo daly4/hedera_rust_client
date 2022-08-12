@@ -65,13 +65,10 @@ impl TokenUpdateTransaction {
     gen_transaction_supply_key_fns!();
 
     // expiry -> expiration_time/set_expiration_time
-    gen_transaction_expiry_time_fns!();
+    gen_transaction_expiry_auto_renew_fns!();
 
     // auto_renew_account
     gen_transaction_auto_renew_account_fns!();
-
-    // auto_renew_period
-    gen_transaction_auto_renew_period_fns!();
 
     // memo
     gen_transaction_optional_memo_fns!();
