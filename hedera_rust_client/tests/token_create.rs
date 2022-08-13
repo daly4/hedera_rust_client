@@ -1,8 +1,8 @@
 mod utils;
 use chrono::Duration;
 use hedera_rust_client::{
-    Key, PrivateKey, Status, TokenCreateTransaction, TokenFreezeStatus, TokenInfoQuery,
-    TokenKycStatus, HederaError, TokenBurnTransaction, FreezeDefault,
+    FreezeDefault, HederaError, Key, PrivateKey, Status, TokenBurnTransaction,
+    TokenCreateTransaction, TokenFreezeStatus, TokenInfoQuery, TokenKycStatus,
 };
 
 #[test_log::test(tokio::test)]
@@ -70,10 +70,7 @@ async fn test_token_create() {
     assert_eq!(info.kyc_key, Some(key.clone()));
     assert_eq!(info.wipe_key, Some(key.clone()));
     assert_eq!(info.supply_key, Some(key.clone()));
-    assert_eq!(
-        info.default_freeze_status,
-        TokenFreezeStatus::Unfrozen
-    );
+    assert_eq!(info.default_freeze_status, TokenFreezeStatus::Unfrozen);
     assert_eq!(info.default_kyc_status, TokenKycStatus::Revoked);
     assert_eq!(info.auto_renew_period, Some(Duration::seconds(7890000)));
     assert_eq!(info.auto_renew_account, Some(env.operator_id));
@@ -165,10 +162,7 @@ async fn test_token_create_multiple_keys() {
     assert_eq!(info.kyc_key, Some(kyc_key.clone()));
     assert_eq!(info.wipe_key, Some(wipe_key.clone()));
     assert_eq!(info.supply_key, Some(supply_key.clone().into()));
-    assert_eq!(
-        info.default_freeze_status,
-        TokenFreezeStatus::Unfrozen
-    );
+    assert_eq!(info.default_freeze_status, TokenFreezeStatus::Unfrozen);
     assert_eq!(info.default_kyc_status, TokenKycStatus::Revoked);
     assert_eq!(info.auto_renew_period, Some(Duration::seconds(7890000)));
     assert_eq!(info.auto_renew_account, Some(env.operator_id));
@@ -224,11 +218,14 @@ async fn test_token_no_admin_sign() {
         .get_receipt(&env.client)
         .await;
 
-    let err = resp.as_ref().err().unwrap_or_else(|| panic!("no err {:?}", resp));
+    let err = resp
+        .as_ref()
+        .err()
+        .unwrap_or_else(|| panic!("no err {:?}", resp));
     match err {
-        HederaError::ReceiptStatusError{ status, .. } => {
+        HederaError::ReceiptStatusError { status, .. } => {
             assert_eq!(*status, Status::InvalidSignature);
-        },
+        }
         _ => panic!("unexpected err: {:?}", err),
     }
 

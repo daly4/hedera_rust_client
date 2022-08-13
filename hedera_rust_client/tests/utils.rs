@@ -123,16 +123,18 @@ impl IntegrationTestEnv {
         initial_balance: Hbar,
     ) -> Result<(AccountId, PrivateKey), HederaError> {
         let new_key = PrivateKey::new();
-        let resp = AccountCreateTransaction::new()
+        let receipt = AccountCreateTransaction::new()
             .set_key(new_key.clone().into())
             .unwrap()
             .set_initial_balance(initial_balance)
             .unwrap()
             .execute(&self.client)
             .await
+            .unwrap()
+            .get_receipt(&self.client)
+            .await
             .unwrap();
 
-        let receipt = resp.get_receipt(&self.client).await.unwrap();
         let account_id = receipt
             .account_id
             .unwrap_or_else(|| panic!("no account_id in account create receipt: {:?}", receipt));

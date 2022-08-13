@@ -1,8 +1,8 @@
 mod utils;
 use hedera_rust_client::{
-    AccountInfoQuery, Hbar, Key, TokenAssociateTransaction, TokenCreateTransaction,
-    TokenFreezeStatus, TokenFreezeTransaction, TokenKycStatus, TokenBurnTransaction,
-    TokenInfoQuery, FreezeDefault,
+    AccountInfoQuery, FreezeDefault, Hbar, Key, TokenAssociateTransaction, TokenBurnTransaction,
+    TokenCreateTransaction, TokenFreezeStatus, TokenFreezeTransaction, TokenInfoQuery,
+    TokenKycStatus,
 };
 
 #[test_log::test(tokio::test)]
@@ -13,7 +13,7 @@ async fn test_token_freeze() {
     // create token
     let amount = 1000000u64;
     let key: Key = env.client.operator_public_key().into();
-    let resp = TokenCreateTransaction::new()
+    let tx = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
         .unwrap()
         .set_name("ffff".to_string())
@@ -42,19 +42,14 @@ async fn test_token_freeze() {
         .unwrap()
         .execute(&env.client)
         .await
-        .unwrap();
-
-    let receipt = resp.get_receipt(&env.client).await.unwrap();
-    let token_id = receipt
-        .token_id
-        .unwrap_or_else(|| panic!("no token_id in receipt: {:?}", receipt));
-
-    let info = TokenInfoQuery::new()
-        .set_token_id(token_id)
         .unwrap()
-        .execute(&env.client)
+        .get_receipt(&env.client)
         .await
         .unwrap();
+
+    let token_id = tx
+        .token_id
+        .unwrap_or_else(|| panic!("no token_id in receipt: {:?}", tx));
 
     // create account
     let (to_account_id, key) = env.new_test_account(Hbar::new(2.0)).await.unwrap();

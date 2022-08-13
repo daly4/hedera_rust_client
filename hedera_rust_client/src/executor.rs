@@ -189,7 +189,6 @@ pub async fn execute(
         ProtoRequest,
     ) -> Result<IntermediateResponse, HederaError>,
 ) -> Result<IntermediateResponse, HederaError> {
-
     trace!("PROTO_DATA: {:?}", request.proto_data());
 
     // get type

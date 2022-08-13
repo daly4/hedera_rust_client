@@ -1,8 +1,8 @@
 mod utils;
 use hedera_rust_client::{
-    AccountInfoQuery, Hbar, Key, TokenAssociateTransaction, TokenCreateTransaction,
-    TokenFreezeStatus, TokenFreezeTransaction, TokenUnfreezeTransaction, TokenKycStatus,
-    TokenBurnTransaction, FreezeDefault,
+    AccountInfoQuery, FreezeDefault, Hbar, Key, TokenAssociateTransaction, TokenBurnTransaction,
+    TokenCreateTransaction, TokenFreezeStatus, TokenFreezeTransaction, TokenKycStatus,
+    TokenUnfreezeTransaction,
 };
 
 #[test_log::test(tokio::test)]
@@ -13,7 +13,7 @@ async fn test_token_unfreeze() {
     // create token
     let amount = 1000000u64;
     let key: Key = env.client.operator_public_key().into();
-    let resp = TokenCreateTransaction::new()
+    let receipt = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
         .unwrap()
         .set_name("ffff".to_string())
@@ -42,9 +42,11 @@ async fn test_token_unfreeze() {
         .unwrap()
         .execute(&env.client)
         .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
         .unwrap();
 
-    let receipt = resp.get_receipt(&env.client).await.unwrap();
     let token_id = receipt
         .token_id
         .unwrap_or_else(|| panic!("no token_id in receipt: {:?}", receipt));
@@ -126,19 +128,19 @@ async fn test_token_unfreeze() {
     assert_eq!(relationship.token_id, token_id);
     assert_eq!(relationship.balance, 0);
     assert_eq!(relationship.kyc_status, TokenKycStatus::Revoked);
-    assert_eq!(relationship.freeze_status, TokenFreezeStatus::Unfrozen, "{:?}", info);
+    assert_eq!(relationship.freeze_status, TokenFreezeStatus::Unfrozen);
 
     let _tx = TokenBurnTransaction::new()
-    .set_token_id(token_id)
-    .unwrap()
-    .set_amount(amount)
-    .unwrap()
-    .execute(&env.client)
-    .await
-    .unwrap()
-    .get_receipt(&env.client)
-    .await
-    .unwrap();
+        .set_token_id(token_id)
+        .unwrap()
+        .set_amount(amount)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
+        .unwrap();
 
     env.close_with_token(token_id).await.unwrap();
 }

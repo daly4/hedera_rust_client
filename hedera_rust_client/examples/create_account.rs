@@ -29,13 +29,13 @@ async fn main() -> Result<(), HederaError> {
     // Create simple Account
     let (new_key, _) = PrivateKey::generate("key-password");
     let initial_balance = Hbar::new(2.0);
-    let resp = AccountCreateTransaction::new()
+    let receipt = AccountCreateTransaction::new()
         .set_key(new_key.clone().into())?
         .set_initial_balance(initial_balance)?
         .execute(&client)
+        .await?
+        .get_receipt(&client)
         .await?;
-
-    let receipt = resp.get_receipt(&client).await?;
 
     println!("Returned:\n{:#?}", receipt);
 

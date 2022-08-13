@@ -1,5 +1,5 @@
-use crate::proto::ToProto;
 use crate::error::HederaError;
+use crate::proto::ToProto;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum FreezeDefault {
