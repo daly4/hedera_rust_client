@@ -10,10 +10,10 @@ readme = "README.md"
 repository = "https://github.com/daly4/hedera_rust_client"
 
 [dependencies]
-syn = {version = "*", features = ["full"] }
-quote = "*"
-proc-macro2 = "*"
-darling = "*"
+syn = "1.0"
+quote = "1.0"
+proc-macro2 = "1.0"
+darling = "0.14"
 
 [lib]
 proc-macro = true
