@@ -1,7 +1,7 @@
 mod utils;
 use hedera_rust_client::{
-    AccountBalanceQuery, FreezeDefault, Hbar, Key, NftId, TokenAssociateTransaction,
-    TokenCreateTransaction, TokenMintTransaction, TokenSupplyType, TokenType, TransferTransaction,
+    AccountBalanceQuery, Hbar, Key, NftId, TokenAssociateTransaction, TokenCreateTransaction,
+    TokenMintTransaction, TokenSupplyType, TokenType, TransferTransaction,
 };
 
 #[test_log::test(tokio::test)]
@@ -28,7 +28,7 @@ async fn test_transfer_fungible() {
         .unwrap()
         .set_auto_renew_account(env.operator_id)
         .unwrap()
-        .set_freeze_default(FreezeDefault::Unfrozen)
+        .set_freeze_default(false)
         .unwrap()
         .execute(&env.client)
         .await
@@ -113,7 +113,7 @@ async fn test_transfer_nonfungible() {
         .unwrap()
         .set_auto_renew_account(env.operator_id)
         .unwrap()
-        .set_freeze_default(FreezeDefault::Unfrozen)
+        .set_freeze_default(false)
         .unwrap()
         .execute(&env.client)
         .await

@@ -284,9 +284,6 @@ pub use self::token_mint_transaction::TokenMintTransaction;
 mod token_revoke_kyc_transaction;
 pub use self::token_revoke_kyc_transaction::TokenRevokeKycTransaction;
 
-mod freeze_default;
-pub use self::freeze_default::FreezeDefault;
-
 mod token_unfreeze_transaction;
 pub use self::token_unfreeze_transaction::TokenUnfreezeTransaction;
 

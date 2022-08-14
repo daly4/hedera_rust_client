@@ -1,8 +1,8 @@
 mod utils;
 use chrono::Duration;
 use hedera_rust_client::{
-    FreezeDefault, HederaError, Key, PrivateKey, Status, TokenBurnTransaction,
-    TokenCreateTransaction, TokenFreezeStatus, TokenInfoQuery, TokenKycStatus,
+    HederaError, Key, PrivateKey, Status, TokenBurnTransaction, TokenCreateTransaction,
+    TokenFreezeStatus, TokenInfoQuery, TokenKycStatus,
 };
 
 #[test_log::test(tokio::test)]
@@ -39,7 +39,7 @@ async fn test_token_create() {
         .unwrap()
         .set_supply_key(key.clone())
         .unwrap()
-        .set_freeze_default(FreezeDefault::Unfrozen)
+        .set_freeze_default(false)
         .unwrap()
         .execute(&env.client)
         .await
@@ -131,7 +131,7 @@ async fn test_token_create_multiple_keys() {
         .unwrap()
         .set_supply_key(supply_key.clone().into())
         .unwrap()
-        .set_freeze_default(FreezeDefault::Unfrozen)
+        .set_freeze_default(false)
         .unwrap()
         .execute(&env.client)
         .await

@@ -6,13 +6,13 @@
 
 ## IMPORTANT
 
-Integration tests are not complete (file service, smart contract service, etc.) Expect bugs throughout. API of lib *will* change
+Integration test suite is not complete (file service, smart contract 2.0 service). API of lib *may* change/evolve.
 
 # hedera_rust_client
 
 Rust client for the Hedera Network
 
-Rust client and utils for interacting with the Hedera Network. This library has been written to mimic, where possible, the offical Hedera Java and Go SDKs.
+Rust client and utils for interacting with the Hedera Network. This library has been written to mimic, where possible, the offical Hedera Java, JS, and Go SDKs.
 
 ## Getting Started
 
@@ -25,7 +25,7 @@ Minimum Supported Rust Version is 1.58.1
 
 ### Installation
 
-1. Provide Hedera AccountId and Private Key for TestNet access through `.env` file
+1. Provide Hedera AccountId and Private Key for TestNet access through `.env` file or through having said env vars set
 
 ```sh
 ACCOUNT_ID=<INSERT>
@@ -44,11 +44,12 @@ See examples and integration tests
 
 ### Tracing
 
-This library uses the [tracing](https://github.com/tokio-rs/tracing) crate for logging during execution:
+This library uses the [tracing](https://github.com/tokio-rs/tracing) crate for logging during execution
 
 ## Roadmap
 
 - [ ] Complete integration testing coverage
+- [ ] Update smart contract transactions to latest
 
 See the [open issues](https://github.com/daly4/hedera_rust_client/issues) for a full list of proposed features (and known issues).
 
@@ -70,7 +71,7 @@ NOTE - all pull requests must pass all integration tests before merge
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under Apache 2.0 and MIT License. See `LICENSE-MIT` and `LICENSE-APACHE` for more information.
 
 ## Contact
 

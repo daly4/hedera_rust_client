@@ -1,9 +1,9 @@
 use dotenv::dotenv;
 use hedera_rust_client::{
-    AccountCreateTransaction, AccountId, ClientBuilder, FreezeDefault, Hbar, HederaError, Key,
-    NetworkName, Operator, PrivateKey, TokenAssociateTransaction, TokenBurnTransaction,
-    TokenCreateTransaction, TokenDeleteTransaction, TokenFreezeTransaction,
-    TokenGrantKycTransaction, TokenWipeTransaction, TransferTransaction,
+    AccountCreateTransaction, AccountId, ClientBuilder, Hbar, HederaError, Key, NetworkName,
+    Operator, PrivateKey, TokenAssociateTransaction, TokenBurnTransaction, TokenCreateTransaction,
+    TokenDeleteTransaction, TokenFreezeTransaction, TokenGrantKycTransaction, TokenWipeTransaction,
+    TransferTransaction,
 };
 use std::env;
 
@@ -64,7 +64,7 @@ async fn main() -> Result<(), HederaError> {
         .set_wipe_key(operator_key.clone())?
         .set_kyc_key(operator_key.clone())?
         .set_supply_key(operator_key.clone().into())?
-        .set_freeze_default(FreezeDefault::Unfrozen)?
+        .set_freeze_default(false)?
         .execute(&client)
         .await?
         .get_receipt(&client)

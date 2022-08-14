@@ -1,6 +1,6 @@
 mod utils;
 use hedera_rust_client::{
-    AccountInfoQuery, FreezeDefault, Hbar, Key, TokenAssociateTransaction, TokenBurnTransaction,
+    AccountInfoQuery, Hbar, Key, TokenAssociateTransaction, TokenBurnTransaction,
     TokenCreateTransaction, TokenFreezeStatus, TokenFreezeTransaction, TokenInfoQuery,
     TokenKycStatus,
 };
@@ -38,7 +38,7 @@ async fn test_token_freeze() {
         .unwrap()
         .set_supply_key(key)
         .unwrap()
-        .set_freeze_default(FreezeDefault::Unfrozen)
+        .set_freeze_default(false)
         .unwrap()
         .execute(&env.client)
         .await

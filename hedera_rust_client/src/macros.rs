@@ -788,12 +788,7 @@ macro_rules! gen_transaction_amount_fns {
 // freeze_default
 macro_rules! gen_transaction_freeze_default_fns {
     () => {
-        gen_transaction_get_set_pb_fns!(
-            freeze_default,
-            crate::freeze_default::FreezeDefault,
-            freeze_default,
-            set_freeze_default
-        );
+        gen_transaction_get_set_pb_fns!(freeze_default, bool, freeze_default, set_freeze_default);
     };
 }
 

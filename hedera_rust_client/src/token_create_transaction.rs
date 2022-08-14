@@ -7,7 +7,6 @@ use crate::utils::DEFAULT_AUTO_RENEW_PERIOD;
 use crate::AccountId;
 use crate::Client;
 use crate::CustomFee;
-use crate::FreezeDefault;
 use crate::Hbar;
 use crate::HederaError;
 use crate::Key;
@@ -127,8 +126,7 @@ struct Proto {
     pub wipe_key: Option<Key>,
     #[hedera_rust_client_derive(to_option_proto)]
     pub supply_key: Option<Key>,
-    #[hedera_rust_client_derive(to_proto)]
-    pub freeze_default: FreezeDefault,
+    pub freeze_default: bool,
     #[hedera_rust_client_derive(to_option_proto)]
     pub expiry: Option<DateTime<Utc>>,
     #[hedera_rust_client_derive(to_option_proto)]
@@ -162,7 +160,7 @@ impl Proto {
             freeze_key: None,
             wipe_key: None,
             supply_key: None,
-            freeze_default: FreezeDefault::Unfrozen,
+            freeze_default: false,
             expiry: None,
             auto_renew_account: None,
             auto_renew_period: None,

@@ -1,6 +1,6 @@
 mod utils;
 use hedera_rust_client::{
-    AccountInfoQuery, FreezeDefault, Hbar, Key, TokenAssociateTransaction, TokenBurnTransaction,
+    AccountInfoQuery, Hbar, Key, TokenAssociateTransaction, TokenBurnTransaction,
     TokenCreateTransaction, TokenFreezeStatus, TokenGrantKycTransaction, TokenKycStatus,
     TokenRevokeKycTransaction,
 };
@@ -38,7 +38,7 @@ async fn test_token_revoke_kyc() {
         .unwrap()
         .set_supply_key(key)
         .unwrap()
-        .set_freeze_default(FreezeDefault::Unfrozen)
+        .set_freeze_default(false)
         .unwrap()
         .execute(&env.client)
         .await

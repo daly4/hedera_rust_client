@@ -1,8 +1,8 @@
 mod utils;
 use hedera_rust_client::{
-    FreezeDefault, Hbar, Key, NftId, TokenAssociateTransaction, TokenBurnTransaction,
-    TokenCreateTransaction, TokenGrantKycTransaction, TokenMintTransaction, TokenNftInfoQuery,
-    TokenType, TokenWipeTransaction, TransferTransaction,
+    Hbar, Key, NftId, TokenAssociateTransaction, TokenBurnTransaction, TokenCreateTransaction,
+    TokenGrantKycTransaction, TokenMintTransaction, TokenNftInfoQuery, TokenType,
+    TokenWipeTransaction, TransferTransaction,
 };
 
 #[test_log::test(tokio::test)]
@@ -36,7 +36,7 @@ async fn test_token_nft_create() {
         .unwrap()
         .set_supply_key(key)
         .unwrap()
-        .set_freeze_default(FreezeDefault::Unfrozen)
+        .set_freeze_default(false)
         .unwrap()
         .execute(&env.client)
         .await
