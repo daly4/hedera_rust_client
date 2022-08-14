@@ -1,7 +1,8 @@
 mod utils;
 use hedera_rust_client::{
     AccountBalanceQuery, Hbar, Key, NftId, TokenAssociateTransaction, TokenCreateTransaction,
-    TokenMintTransaction, TokenSupplyType, TokenType, TransferTransaction,
+    TokenMintTransaction, TokenSupplyType, TokenType, TransferTransaction, TokenWipeTransaction,
+    TokenBurnTransaction,
 };
 
 #[test_log::test(tokio::test)]
@@ -10,8 +11,9 @@ async fn test_transfer_fungible() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     // create token
-    let _key: Key = env.client.operator_public_key().into();
-    let resp = TokenCreateTransaction::new()
+    let init_supply = 1000000u64;
+    let key: Key = env.client.operator_public_key().into();
+    let receipt = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
         .unwrap()
         .set_name("transfer_test".to_string())
@@ -22,9 +24,15 @@ async fn test_transfer_fungible() {
         .unwrap()
         .set_decimals(3)
         .unwrap()
-        .set_initial_supply(1000000)
+        .set_initial_supply(init_supply)
         .unwrap()
         .set_treasury(env.operator_id)
+        .unwrap()
+        .set_admin_key(key.clone())
+        .unwrap()
+        .set_supply_key(key.clone())
+        .unwrap()
+        .set_wipe_key(key.clone())
         .unwrap()
         .set_auto_renew_account(env.operator_id)
         .unwrap()
@@ -32,30 +40,38 @@ async fn test_transfer_fungible() {
         .unwrap()
         .execute(&env.client)
         .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
         .unwrap();
 
-    let receipt = resp.get_receipt(&env.client).await.unwrap();
     let token_id = receipt
         .token_id
         .unwrap_or_else(|| panic!("no token_id in receipt: {:?}", receipt));
 
     // create account
-    let (to_account_id, _) = env.new_test_account(Hbar::new(2.0)).await.unwrap();
+    let (to_account_id, key) = env.new_test_account(Hbar::new(2.0)).await.unwrap();
 
     // associate new account w/ token
-    let tx = TokenAssociateTransaction::new()
+    let _tx = TokenAssociateTransaction::new()
         .set_account_id(to_account_id)
         .unwrap()
         .set_tokens(vec![token_id])
         .unwrap()
+        .freeze_with(Some(&env.client))
+        .await
+        .unwrap()
+        .sign(&key)
+        .unwrap()
         .execute(&env.client)
+        .await
+        .unwrap()
+        .get_receipt(&env.client)
         .await
         .unwrap();
 
-    let _receipt = tx.get_receipt(&env.client).await.unwrap();
-
     let from_account_id = env.operator_id;
-    let amount = 10i64;
+    let amount = 1000i64;
     let _tx = TransferTransaction::new()
         .add_token_transfer(token_id, from_account_id, -amount, None)
         .unwrap()
@@ -63,9 +79,10 @@ async fn test_transfer_fungible() {
         .unwrap()
         .execute(&env.client)
         .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
         .unwrap();
-
-    let _receipt = resp.get_receipt(&env.client).await.unwrap();
 
     let balance_query = AccountBalanceQuery::new()
         .set_account_id(to_account_id)
@@ -79,7 +96,35 @@ async fn test_transfer_fungible() {
         .get(&token_id)
         .unwrap_or_else(|| panic!("no token_id in query: {:?}", balance_query));
     let exp_amount: u64 = amount.try_into().unwrap();
+    
     assert_eq!(balance, &exp_amount);
+
+    let _tx = TokenWipeTransaction::new()
+        .set_token_id(token_id)
+        .unwrap()
+        .set_account_id(to_account_id)
+        .unwrap()
+        .set_amount(exp_amount)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
+        .unwrap();
+
+    let amount = init_supply - exp_amount;
+    let _tx = TokenBurnTransaction::new()
+        .set_token_id(token_id)
+        .unwrap()
+        .set_amount(amount)
+        .unwrap()
+        .execute(&env.client)
+        .await
+        .unwrap()
+        .get_receipt(&env.client)
+        .await
+        .unwrap();
 
     env.close_with_token(token_id).await.unwrap();
 }
@@ -90,6 +135,7 @@ async fn test_transfer_nonfungible() {
     let env = utils::IntegrationTestEnv::open().await.unwrap();
 
     // create token
+    let key: Key = env.client.operator_public_key().into();
     let tx = TokenCreateTransaction::new()
         .set_node_account_ids(env.node_account_ids.clone())
         .unwrap()
@@ -112,6 +158,10 @@ async fn test_transfer_nonfungible() {
         .set_treasury(env.operator_id)
         .unwrap()
         .set_auto_renew_account(env.operator_id)
+        .unwrap()
+        .set_admin_key(key.clone())
+        .unwrap()
+        .set_supply_key(key.clone())
         .unwrap()
         .set_freeze_default(false)
         .unwrap()
@@ -145,14 +195,19 @@ async fn test_transfer_nonfungible() {
         .get(0)
         .unwrap_or_else(|| panic!("no serial_numbers in receipt: {:?}", tx));
 
-    // create new account
-    let (to_account_id, _) = env.new_test_account(Hbar::new(2.0)).await.unwrap();
+    // create account
+    let (to_account_id, key) = env.new_test_account(Hbar::new(2.0)).await.unwrap();
 
     // associate new account w/ token
     let _tx = TokenAssociateTransaction::new()
         .set_account_id(to_account_id)
         .unwrap()
         .set_tokens(vec![token_id])
+        .unwrap()
+        .freeze_with(Some(&env.client))
+        .await
+        .unwrap()
+        .sign(&key)
         .unwrap()
         .execute(&env.client)
         .await
