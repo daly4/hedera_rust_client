@@ -104,7 +104,10 @@ mod exchange_rate;
 pub use self::exchange_rate::ExchangeRate;
 
 mod client;
-pub use self::client::{Client, ClientBuilder, ClientConfig, Operator};
+pub use self::client::{
+    Client, ClientBuilder, ClientConfig, Operator, OperatorConfig,
+    NetworkConfig, MirrorNetworkConfig,
+};
 
 mod crypto;
 pub use self::crypto::{Asn1Error, PrivateKey, PublicKey, Signature};

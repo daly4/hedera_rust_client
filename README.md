@@ -1,12 +1,13 @@
 <!-- PROJECT SHIELDS -->
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-## IMPORTANT
+# PROJECT ARCHIVED
 
-Integration test suite is not complete (file service, smart contract 2.0 service). API of lib *may* change/evolve.
+Project has been archived, please see [hedera-sdk-rust](https://github.com/hashgraph/hedera-sdk-rust)
 
 # hedera_rust_client
 

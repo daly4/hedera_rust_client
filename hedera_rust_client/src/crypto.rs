@@ -571,6 +571,46 @@ impl Display for PrivateKey {
     }
 }
 
+impl Serialize for PrivateKey {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut ts = serializer.serialize_tuple_struct("PrivateKey", 1)?;
+        ts.serialize_field(&self.to_string())?;
+        ts.end()
+    }
+}
+impl<'de> Deserialize<'de> for PrivateKey {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct PrivateKeyVisitor;
+
+        impl<'de> Visitor<'de> for PrivateKeyVisitor {
+            type Value = PrivateKey;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct PrivateKey")
+            }
+
+            fn visit_seq<V>(self, mut seq: V) -> Result<Self::Value, V::Error>
+            where
+                V: SeqAccess<'de>,
+            {
+                let s = seq
+                    .next_element()?
+                    .ok_or_else(|| de::Error::invalid_length(0, &self))?;
+
+                Ok(PrivateKey::from_str(s).map_err(de::Error::custom)?)
+            }
+        }
+
+        deserializer.deserialize_seq(PrivateKeyVisitor)
+    }
+}
+
 /// An EdDSA signature.
 #[derive(Debug)]
 pub struct Signature(ed25519_dalek::Signature);

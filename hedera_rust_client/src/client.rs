@@ -17,36 +17,36 @@ use crate::AccountBalance;
 use crate::AccountBalanceQuery;
 use crate::AccountId;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OperatorConfig {
-    account_id: String,
-    private_key: String,
+    pub account_id: String,
+    pub private_key: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(untagged)]
 pub enum NetworkConfig {
     Str(String),
     Map(HashMap<String, String>),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(untagged)]
 pub enum MirrorNetworkConfig {
     Str(String),
     StrVec(Vec<String>),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ClientConfig {
-    network: NetworkConfig,
+    pub network: NetworkConfig,
     #[serde(default)]
-    operator: Option<OperatorConfig>,
+    pub operator: Option<OperatorConfig>,
     // #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
-    mirror_network: Option<MirrorNetworkConfig>,
+    pub mirror_network: Option<MirrorNetworkConfig>,
 }
 
 impl ClientConfig {
